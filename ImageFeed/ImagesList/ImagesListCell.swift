@@ -7,4 +7,5 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet var likeButton: UIButton!
     
     static let reuseIdentifier = "ImagesListCell"
+    
 }
