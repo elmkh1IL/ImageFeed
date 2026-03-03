@@ -36,12 +36,6 @@
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="27 августа 2022" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JRK-A0-n0X" userLabel="Date_label">
-                                                    <rect key="frame" x="26" y="114" width="101.66666666666669" height="15.666666666666686"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SGT-7F-hOX" userLabel="Like_button">
                                                     <rect key="frame" x="333" y="4" width="44" height="44"/>
                                                     <constraints>
@@ -51,17 +45,23 @@
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="Like_Active"/>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JRK-A0-n0X" userLabel="Date_label">
+                                                    <rect key="frame" x="20" y="121" width="102" height="16"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="JRK-A0-n0X" firstAttribute="bottom" secondItem="Kfs-kk-5d0" secondAttribute="bottom" constant="8" id="E4f-YK-SJd"/>
-                                                <constraint firstItem="JRK-A0-n0X" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Kfs-kk-5d0" secondAttribute="trailing" constant="8" id="UdJ-ow-fSk"/>
+                                                <constraint firstItem="JRK-A0-n0X" firstAttribute="bottom" secondItem="Kfs-kk-5d0" secondAttribute="bottom" constant="-4" id="IfE-9k-QuQ"/>
                                                 <constraint firstItem="SGT-7F-hOX" firstAttribute="trailing" secondItem="Kfs-kk-5d0" secondAttribute="trailing" id="Y4s-TU-MRj"/>
                                                 <constraint firstAttribute="trailing" secondItem="Kfs-kk-5d0" secondAttribute="trailing" constant="16" id="leS-Ud-fTE"/>
                                                 <constraint firstItem="Kfs-kk-5d0" firstAttribute="leading" secondItem="1QS-fp-1c8" secondAttribute="leading" constant="16" id="mFp-bq-V1s"/>
-                                                <constraint firstItem="JRK-A0-n0X" firstAttribute="leading" secondItem="Kfs-kk-5d0" secondAttribute="leading" constant="8" id="n5i-Mo-ODL"/>
+                                                <constraint firstItem="JRK-A0-n0X" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Kfs-kk-5d0" secondAttribute="trailing" constant="-255" id="nuL-R9-Yok"/>
                                                 <constraint firstItem="Kfs-kk-5d0" firstAttribute="top" secondItem="1QS-fp-1c8" secondAttribute="top" constant="4" id="opa-v1-nmB"/>
                                                 <constraint firstAttribute="bottom" secondItem="Kfs-kk-5d0" secondAttribute="bottom" constant="4" id="pNu-DR-tzZ"/>
                                                 <constraint firstItem="SGT-7F-hOX" firstAttribute="top" secondItem="Kfs-kk-5d0" secondAttribute="top" id="wxD-e0-yJa"/>
+                                                <constraint firstItem="JRK-A0-n0X" firstAttribute="leading" secondItem="Kfs-kk-5d0" secondAttribute="leading" constant="4" id="x5M-fH-x7o"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="YP Black"/>
@@ -83,8 +83,10 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="b9V-5E-yd1" secondAttribute="trailing" id="5vP-AF-D5Y"/>
                             <constraint firstItem="b9V-5E-yd1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="75b-RM-nib"/>
-                            <constraint firstItem="b9V-5E-yd1" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="eem-gj-ENy"/>
-                            <constraint firstAttribute="bottom" secondItem="b9V-5E-yd1" secondAttribute="bottom" id="kwI-ve-lid"/>
+                            <constraint firstItem="b9V-5E-yd1" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Fp1-zr-P3A"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="b9V-5E-yd1" secondAttribute="top" constant="118" id="ZQa-ag-QYh"/>
+                            <constraint firstAttribute="bottom" secondItem="b9V-5E-yd1" secondAttribute="bottom" id="g2U-qq-bnQ"/>
+                            <constraint firstItem="b9V-5E-yd1" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="68" id="ynG-48-Ocf"/>
                         </constraints>
                     </view>
                     <connections>

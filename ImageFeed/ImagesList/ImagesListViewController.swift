@@ -17,7 +17,6 @@ final class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-        tableView.rowHeight = 200
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
 }
@@ -50,7 +49,7 @@ extension ImagesListViewController {
             return
         }
         
-        cell.imageView?.image = image
+        cell.imageCell.image = image
         
         let currentDate = Date()
         let formattedDate = dateFormatter.string(from: currentDate)
@@ -77,7 +76,7 @@ extension ImagesListViewController: UITableViewDelegate {
         }
         
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
-        let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
+        let imageViewWidth = tableView.frame.width - imageInsets.left - imageInsets.right
         let imageWidth = image.size.width
         let scale = imageViewWidth / imageWidth
         let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
