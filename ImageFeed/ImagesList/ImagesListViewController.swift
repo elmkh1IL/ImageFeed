@@ -48,9 +48,9 @@ extension ImagesListViewController {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return
         }
-        
+
         cell.imageCell.image = image
-        
+
         let currentDate = Date()
         let formattedDate = dateFormatter.string(from: currentDate)
         cell.dataLabel?.text = formattedDate
