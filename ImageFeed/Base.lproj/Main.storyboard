@@ -26,11 +26,9 @@
                                             <rect key="frame" x="0.0" y="0.0" width="393" height="145"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-<<<<<<< HEAD
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="Kfs-kk-5d0" userLabel="ImageCell">
                                                     <rect key="frame" x="16" y="4" width="361" height="137"/>
                                                     <color key="backgroundColor" red="0.74896252360000004" green="0.78559810689999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-=======
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                             <integer key="value" value="16"/>
@@ -41,27 +39,20 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SGT-7F-hOX" userLabel="Like_button">
                                                     <rect key="frame" x="333" y="4" width="44" height="44"/>
                                                     <constraints>
-<<<<<<< HEAD
                                                         <constraint firstAttribute="width" constant="44" id="os1-Eq-LjE"/>
                                                         <constraint firstAttribute="height" constant="44" id="t2o-RV-mkG"/>
-=======
-                                                  
                                                     </constraints>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="Like_Active"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JRK-A0-n0X" userLabel="Date_label">
-<<<<<<< HEAD
                                                     <rect key="frame" x="20" y="121" width="102" height="16"/>
-=======
-                                                    
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-<<<<<<< HEAD
                                                 <constraint firstItem="JRK-A0-n0X" firstAttribute="bottom" secondItem="Kfs-kk-5d0" secondAttribute="bottom" constant="-4" id="IfE-9k-QuQ"/>
                                                 <constraint firstItem="SGT-7F-hOX" firstAttribute="trailing" secondItem="Kfs-kk-5d0" secondAttribute="trailing" id="Y4s-TU-MRj"/>
                                                 <constraint firstAttribute="trailing" secondItem="Kfs-kk-5d0" secondAttribute="trailing" constant="16" id="leS-Ud-fTE"/>
@@ -71,7 +62,6 @@
                                                 <constraint firstAttribute="bottom" secondItem="Kfs-kk-5d0" secondAttribute="bottom" constant="4" id="pNu-DR-tzZ"/>
                                                 <constraint firstItem="SGT-7F-hOX" firstAttribute="top" secondItem="Kfs-kk-5d0" secondAttribute="top" id="wxD-e0-yJa"/>
                                                 <constraint firstItem="JRK-A0-n0X" firstAttribute="leading" secondItem="Kfs-kk-5d0" secondAttribute="leading" constant="4" id="x5M-fH-x7o"/>
-
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="YP Black"/>
@@ -93,12 +83,10 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="b9V-5E-yd1" secondAttribute="trailing" id="5vP-AF-D5Y"/>
                             <constraint firstItem="b9V-5E-yd1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="75b-RM-nib"/>
-<<<<<<< HEAD
                             <constraint firstItem="b9V-5E-yd1" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Fp1-zr-P3A"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="top" secondItem="b9V-5E-yd1" secondAttribute="top" constant="118" id="ZQa-ag-QYh"/>
                             <constraint firstAttribute="bottom" secondItem="b9V-5E-yd1" secondAttribute="bottom" id="g2U-qq-bnQ"/>
                             <constraint firstItem="b9V-5E-yd1" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="68" id="ynG-48-Ocf"/>
-
                         </constraints>
                     </view>
                     <connections>
@@ -111,11 +99,8 @@
         </scene>
     </scenes>
     <resources>
-<<<<<<< HEAD
         <image name="0" width="1600" height="1059"/>
         <image name="Like_Active" width="44" height="44"/>
-=======
-       
         <namedColor name="YP Black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
