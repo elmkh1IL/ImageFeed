@@ -21,8 +21,6 @@ final class ProfileViewController: UIViewController {
         profileImage = UIImageView()
         profileImage.image = UIImage(named: "Photo")
         profileImage.contentMode = .scaleAspectFill
-        profileImage.clipsToBounds = true
-        profileImage.layer.cornerRadius = 35
         view.addSubview(profileImage)
         
         profileImage.translatesAutoresizingMaskIntoConstraints = false
@@ -38,14 +36,14 @@ final class ProfileViewController: UIViewController {
         nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont.systemFont(ofSize: 23.0, weight: .semibold)
-        nameLabel.textAlignment = .right
+        nameLabel.textAlignment = .left
+        nameLabel.textColor = UIColor.white
         view.addSubview(nameLabel)
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-        nameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            nameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
         nameLabel.topAnchor.constraint(equalTo: profileImage.bottomAnchor, constant: 8),
-        nameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: profileImage.trailingAnchor, constant: 8)
         ])
     }
         
@@ -53,14 +51,14 @@ final class ProfileViewController: UIViewController {
         usernameLabel = UILabel()
         usernameLabel.text = "ekaterina_nov"
         usernameLabel.font = UIFont.systemFont(ofSize: 13.0)
-        usernameLabel.textAlignment = .right
+        usernameLabel.textAlignment = .left
+        usernameLabel.textColor = UIColor.white
         view.addSubview(usernameLabel)
         
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-          usernameLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            usernameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
           usernameLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-          usernameLabel.leadingAnchor.constraint(greaterThanOrEqualTo: profileImage.trailingAnchor, constant: 8)
                 ])
     }
     
@@ -68,14 +66,14 @@ final class ProfileViewController: UIViewController {
         descriptionLabel = UILabel()
         descriptionLabel.text = "Hello, word!"
         descriptionLabel.font = UIFont.systemFont(ofSize: 13.0)
-        descriptionLabel.textAlignment = .right
+        descriptionLabel.textAlignment = .left
+        descriptionLabel.textColor = UIColor.white
         view.addSubview(descriptionLabel)
         
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             descriptionLabel.topAnchor.constraint(equalTo: usernameLabel.bottomAnchor, constant: 8),
-            descriptionLabel.leadingAnchor.constraint(greaterThanOrEqualTo: profileImage.trailingAnchor, constant: 8)
                 ])
     }
     

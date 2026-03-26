@@ -11,7 +11,7 @@
         <!--Profile-->
         <scene sceneID="Ti7-nF-y4W">
             <objects>
-                <viewController title="Profile" id="niv-Uk-8ag" customClass="ProfileViewController" sceneMemberID="viewController">
+                <viewController title="Profile" id="niv-Uk-8ag" customClass="ProfileViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4xf-Uw-mkw">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -56,7 +56,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="Backward"/>
                                 <connections>
-                                    <action selector="didTapBackButton:" destination="N9v-Eb-Bz4" eventType="touchUpInside" id="8ec-03-iu5"/>
+                                    <action selector="didTapBackButton" destination="N9v-Eb-Bz4" eventType="touchUpInside" id="SHW-kr-bXh"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kRl-mg-khk" userLabel="Sharing Button">
@@ -87,7 +87,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="skK-vG-8mr"/>
                     <connections>
-                        <outlet property="didTapBackButton" destination="eQB-zk-HPH" id="sBi-2u-Gho"/>
                         <outlet property="imageView" destination="dFE-QR-Z0e" id="dgw-Wm-T09"/>
                         <outlet property="scrollView" destination="wU4-KP-iw5" id="8H4-P4-9QP"/>
                     </connections>
@@ -108,8 +107,8 @@
                         <color key="selectedImageTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="G1E-KV-VyF"/>
-                        <segue destination="niv-Uk-8ag" kind="relationship" relationship="viewControllers" id="IdA-XF-8Bb"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="het-8e-3aI"/>
+                        <segue destination="niv-Uk-8ag" kind="relationship" relationship="viewControllers" id="AFC-Es-1wL"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vB8-Vm-IP9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -201,7 +200,7 @@
                     <navigationItem key="navigationItem" id="sBl-Xg-U5A"/>
                     <connections>
                         <outlet property="tableView" destination="b9V-5E-yd1" id="Cij-av-NHE"/>
-                        <segue destination="N9v-Eb-Bz4" kind="presentation" identifier="ShowSingleImag" id="l9R-Wj-dRa"/>
+                        <segue destination="N9v-Eb-Bz4" kind="show" identifier="ShowSingleImage" id="J4N-Fn-eRc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
