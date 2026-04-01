@@ -35,9 +35,9 @@ final class ProfileViewController: UIViewController {
     private func setupNameLabel(){
         nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
-        nameLabel.font = UIFont.systemFont(ofSize: 23.0, weight: .semibold)
+        nameLabel.font = UIFont.systemFont(ofSize: 23.0, weight: .bold)
         nameLabel.textAlignment = .left
-        nameLabel.textColor = UIColor.white
+        nameLabel.textColor = UIColor(named: "YP White")
         view.addSubview(nameLabel)
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false

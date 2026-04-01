@@ -36,8 +36,8 @@
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="dFE-QR-Z0e">
-                                        <rect key="frame" x="-18" y="0.0" width="1638" height="1079"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="411" height="852"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" name="YP Black"/>
                                     </imageView>
                                 </subviews>
@@ -76,13 +76,13 @@
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
                             <constraint firstItem="eQB-zk-HPH" firstAttribute="top" secondItem="iJ7-GK-feF" secondAttribute="top" constant="8" id="83q-qn-QP8"/>
-                            <constraint firstItem="iJ7-GK-feF" firstAttribute="trailing" secondItem="wU4-KP-iw5" secondAttribute="trailing" id="GRa-yD-mTg"/>
-                            <constraint firstItem="wU4-KP-iw5" firstAttribute="top" secondItem="pfs-O1-dfV" secondAttribute="top" id="IH8-nM-ZVx"/>
                             <constraint firstItem="iJ7-GK-feF" firstAttribute="bottom" secondItem="kRl-mg-khk" secondAttribute="bottom" constant="17" id="YOP-qN-98l"/>
-                            <constraint firstAttribute="bottom" secondItem="wU4-KP-iw5" secondAttribute="bottom" id="e8k-em-MDK"/>
+                            <constraint firstAttribute="bottom" secondItem="wU4-KP-iw5" secondAttribute="bottom" id="dod-lp-Xub"/>
                             <constraint firstItem="kRl-mg-khk" firstAttribute="centerX" secondItem="pfs-O1-dfV" secondAttribute="centerX" id="fFq-eU-1iO"/>
-                            <constraint firstItem="wU4-KP-iw5" firstAttribute="leading" secondItem="iJ7-GK-feF" secondAttribute="leading" id="hZN-H9-3DZ"/>
                             <constraint firstItem="eQB-zk-HPH" firstAttribute="leading" secondItem="iJ7-GK-feF" secondAttribute="leading" constant="8" id="jzY-Y0-YeR"/>
+                            <constraint firstItem="wU4-KP-iw5" firstAttribute="leading" secondItem="iJ7-GK-feF" secondAttribute="leading" id="nlc-xg-n4g"/>
+                            <constraint firstItem="wU4-KP-iw5" firstAttribute="top" secondItem="pfs-O1-dfV" secondAttribute="top" id="nu6-Ia-raL"/>
+                            <constraint firstItem="iJ7-GK-feF" firstAttribute="trailing" secondItem="wU4-KP-iw5" secondAttribute="trailing" id="pdj-7M-c4p"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="skK-vG-8mr"/>
@@ -93,7 +93,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hi8-Vg-EvP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2193" y="-539"/>
+            <point key="canvasLocation" x="2191.6030534351144" y="-539.43661971830988"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="jnn-d4-p5t">
