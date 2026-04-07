@@ -49,10 +49,10 @@ final class ProfileViewController: UIViewController {
         
     private func setupUsernameLabel() {
         usernameLabel = UILabel()
-        usernameLabel.text = "ekaterina_nov"
+        usernameLabel.text = "@ekaterina_nov"
         usernameLabel.font = UIFont.systemFont(ofSize: 13.0)
         usernameLabel.textAlignment = .left
-        usernameLabel.textColor = UIColor.white
+        usernameLabel.textColor = UIColor(named: "YP Gray")
         view.addSubview(usernameLabel)
         
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -67,7 +67,7 @@ final class ProfileViewController: UIViewController {
         descriptionLabel.text = "Hello, word!"
         descriptionLabel.font = UIFont.systemFont(ofSize: 13.0)
         descriptionLabel.textAlignment = .left
-        descriptionLabel.textColor = UIColor.white
+        descriptionLabel.textColor = UIColor(named: "YP White")
         view.addSubview(descriptionLabel)
         
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
