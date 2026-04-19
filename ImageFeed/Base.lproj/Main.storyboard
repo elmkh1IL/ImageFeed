@@ -162,6 +162,9 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Unsplash 1" translatesAutoresizingMaskIntoConstraints="NO" id="KBX-yJ-VCW">
+                                <rect key="frame" x="0.0" y="113" width="393" height="705"/>
+                            </imageView>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="V8G-20-M77">
                                 <rect key="frame" x="0.0" y="113" width="393" height="4"/>
                                 <color key="tintColor" name="YP Black"/>
@@ -175,8 +178,12 @@
                             <constraint firstItem="Svf-3j-xqG" firstAttribute="top" secondItem="bkj-QG-eGo" secondAttribute="top" id="EJE-Hl-0fp"/>
                             <constraint firstItem="V8G-20-M77" firstAttribute="trailing" secondItem="bkj-QG-eGo" secondAttribute="trailing" id="Efr-TR-oRF"/>
                             <constraint firstAttribute="bottom" secondItem="Svf-3j-xqG" secondAttribute="bottom" id="FVp-se-3Yg"/>
+                            <constraint firstItem="KBX-yJ-VCW" firstAttribute="leading" secondItem="bkj-QG-eGo" secondAttribute="leading" id="JQK-Rk-MyH"/>
                             <constraint firstItem="Svf-3j-xqG" firstAttribute="leading" secondItem="rCo-D7-5kd" secondAttribute="leading" id="Jda-Oo-weo"/>
+                            <constraint firstItem="bkj-QG-eGo" firstAttribute="bottom" secondItem="KBX-yJ-VCW" secondAttribute="bottom" id="NF1-RQ-NvT"/>
+                            <constraint firstItem="KBX-yJ-VCW" firstAttribute="top" secondItem="bkj-QG-eGo" secondAttribute="top" id="dsH-bQ-Y2u"/>
                             <constraint firstItem="Svf-3j-xqG" firstAttribute="trailing" secondItem="rCo-D7-5kd" secondAttribute="trailing" id="uzI-Ik-Pdi"/>
+                            <constraint firstItem="KBX-yJ-VCW" firstAttribute="trailing" secondItem="bkj-QG-eGo" secondAttribute="trailing" id="w1U-rd-eAt"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Ad2-5q-G2k"/>
@@ -304,7 +311,7 @@
         <!--SplashViewController-->
         <scene sceneID="HdY-w5-dgw">
             <objects>
-                <viewController title="SplashViewController" id="hgw-Hg-8NK" sceneMemberID="viewController">
+                <viewController title="SplashViewController" id="hgw-Hg-8NK" customClass="SplashViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="E5b-mz-qqD">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -354,6 +361,7 @@
         <image name="Like_Active" width="44" height="44"/>
         <image name="Profile Active" width="30" height="30"/>
         <image name="Sharing" width="50" height="50"/>
+        <image name="Unsplash 1" width="375" height="649"/>
         <image name="Vector" width="75" height="78"/>
         <image name="auth_screen_logo" width="60" height="60"/>
         <namedColor name="YP Black">
