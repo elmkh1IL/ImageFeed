@@ -154,7 +154,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Svf-3j-xqG">
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xP2-jB-sLX">
                                 <rect key="frame" x="0.0" y="113" width="393" height="739"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <wkWebViewConfiguration key="configuration">
@@ -162,9 +162,6 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Unsplash 1" translatesAutoresizingMaskIntoConstraints="NO" id="KBX-yJ-VCW">
-                                <rect key="frame" x="0.0" y="113" width="393" height="705"/>
-                            </imageView>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="V8G-20-M77">
                                 <rect key="frame" x="0.0" y="113" width="393" height="4"/>
                                 <color key="tintColor" name="YP Black"/>
@@ -174,22 +171,18 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="V8G-20-M77" firstAttribute="leading" secondItem="bkj-QG-eGo" secondAttribute="leading" id="2J0-q7-Afh"/>
+                            <constraint firstItem="xP2-jB-sLX" firstAttribute="top" secondItem="bkj-QG-eGo" secondAttribute="top" id="2wu-rN-bxn"/>
                             <constraint firstItem="V8G-20-M77" firstAttribute="top" secondItem="bkj-QG-eGo" secondAttribute="top" id="6pH-M9-aei"/>
-                            <constraint firstItem="Svf-3j-xqG" firstAttribute="top" secondItem="bkj-QG-eGo" secondAttribute="top" id="EJE-Hl-0fp"/>
                             <constraint firstItem="V8G-20-M77" firstAttribute="trailing" secondItem="bkj-QG-eGo" secondAttribute="trailing" id="Efr-TR-oRF"/>
-                            <constraint firstAttribute="bottom" secondItem="Svf-3j-xqG" secondAttribute="bottom" id="FVp-se-3Yg"/>
-                            <constraint firstItem="KBX-yJ-VCW" firstAttribute="leading" secondItem="bkj-QG-eGo" secondAttribute="leading" id="JQK-Rk-MyH"/>
-                            <constraint firstItem="Svf-3j-xqG" firstAttribute="leading" secondItem="rCo-D7-5kd" secondAttribute="leading" id="Jda-Oo-weo"/>
-                            <constraint firstItem="bkj-QG-eGo" firstAttribute="bottom" secondItem="KBX-yJ-VCW" secondAttribute="bottom" id="NF1-RQ-NvT"/>
-                            <constraint firstItem="KBX-yJ-VCW" firstAttribute="top" secondItem="bkj-QG-eGo" secondAttribute="top" id="dsH-bQ-Y2u"/>
-                            <constraint firstItem="Svf-3j-xqG" firstAttribute="trailing" secondItem="rCo-D7-5kd" secondAttribute="trailing" id="uzI-Ik-Pdi"/>
-                            <constraint firstItem="KBX-yJ-VCW" firstAttribute="trailing" secondItem="bkj-QG-eGo" secondAttribute="trailing" id="w1U-rd-eAt"/>
+                            <constraint firstAttribute="bottom" secondItem="xP2-jB-sLX" secondAttribute="bottom" id="LTq-X3-809"/>
+                            <constraint firstItem="xP2-jB-sLX" firstAttribute="leading" secondItem="rCo-D7-5kd" secondAttribute="leading" id="i9T-b1-i1e"/>
+                            <constraint firstAttribute="trailing" secondItem="xP2-jB-sLX" secondAttribute="trailing" id="nPk-Cq-OON"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Ad2-5q-G2k"/>
                     <connections>
                         <outlet property="progressView" destination="V8G-20-M77" id="Maa-0A-w0C"/>
-                        <outlet property="webView" destination="Svf-3j-xqG" id="0DG-Cb-G87"/>
+                        <outlet property="webView" destination="xP2-jB-sLX" id="rl1-VL-hET"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ROS-M1-XJd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -361,7 +354,6 @@
         <image name="Like_Active" width="44" height="44"/>
         <image name="Profile Active" width="30" height="30"/>
         <image name="Sharing" width="50" height="50"/>
-        <image name="Unsplash 1" width="375" height="649"/>
         <image name="Vector" width="75" height="78"/>
         <image name="auth_screen_logo" width="60" height="60"/>
         <namedColor name="YP Black">

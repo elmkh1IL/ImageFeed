@@ -1,12 +1,17 @@
 import Foundation
 
-private let tokenStorage = OAuth2TokenStorage()
-
 enum NetworkError: Error {
     case invalidRequest
     case httpStatusCode(Int)
     case unknownHTTPResponse
     case decodingError(Error)
+}
+
+enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
 }
 
 struct OAuthTokenResponseBody: Codable {
@@ -46,30 +51,7 @@ final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
-    
-    private let tokenStorage = OAuth2TokenStorage()
-    
-    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
-        guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
-            return nil
-        }
-        
-        urlComponents.queryItems = [
-            URLQueryItem(name: "client_id", value: Constants.accessKey),
-            URLQueryItem(name: "client_secret", value: Constants.secretKey),
-            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-            URLQueryItem(name: "code", value: code),
-            URLQueryItem(name: "grant_type", value: "authorization_code"),
-        ]
-        
-        guard let authTokenUrl = urlComponents.url else {
-            return nil
-        }
-        
-        var request = URLRequest(url: authTokenUrl)
-        request.httpMethod = "POST"
-        return request
-    }
+    private let jsonDecoder = JSONDecoder()
     
     func fetchOAuthToken(
         code: String,
@@ -106,8 +88,8 @@ final class OAuth2Service {
                 }
                 
                 do {
-                    let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    self.tokenStorage.token = responseBody.accessToken
+                    let responseBody = try self.jsonDecoder.decode(OAuthTokenResponseBody.self, from: data)
+                    OAuth2TokenStorage.shared.token = responseBody.accessToken
                     DispatchQueue.main.async {
                         completion(.success(responseBody.accessToken))
                     }
@@ -127,4 +109,26 @@ final class OAuth2Service {
         }
         task.resume()
     }
+}
+
+private func makeOAuthTokenRequest(code: String) -> URLRequest? {
+    guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
+        return nil
+    }
+    
+    urlComponents.queryItems = [
+        URLQueryItem(name: "client_id", value: Constants.accessKey),
+        URLQueryItem(name: "client_secret", value: Constants.secretKey),
+        URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+        URLQueryItem(name: "code", value: code),
+        URLQueryItem(name: "grant_type", value: "authorization_code"),
+    ]
+    
+    guard let authTokenUrl = urlComponents.url else {
+        return nil
+    }
+    
+    var request = URLRequest(url: authTokenUrl)
+    request.httpMethod = HTTPMethod.post.rawValue
+    return request
 }

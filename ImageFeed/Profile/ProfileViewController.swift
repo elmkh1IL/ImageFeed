@@ -19,7 +19,7 @@ final class ProfileViewController: UIViewController {
     
     private func setupProfileImage() {
         profileImage = UIImageView()
-        profileImage.image = UIImage(named: "Photo")
+        profileImage.image = UIImage(resource: .photo)
         profileImage.contentMode = .scaleAspectFill
         view.addSubview(profileImage)
         
@@ -37,7 +37,7 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont.systemFont(ofSize: 23.0, weight: .bold)
         nameLabel.textAlignment = .left
-        nameLabel.textColor = UIColor(named: "YP White")
+        nameLabel.textColor = UIColor(resource: .ypWhite)
         view.addSubview(nameLabel)
         
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -52,7 +52,7 @@ final class ProfileViewController: UIViewController {
         usernameLabel.text = "@ekaterina_nov"
         usernameLabel.font = UIFont.systemFont(ofSize: 13.0)
         usernameLabel.textAlignment = .left
-        usernameLabel.textColor = UIColor(named: "YP Gray")
+        usernameLabel.textColor = UIColor(resource: .ypGray)
         view.addSubview(usernameLabel)
         
         usernameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -64,10 +64,10 @@ final class ProfileViewController: UIViewController {
     
     private func setupDescriptionLabel() {
         descriptionLabel = UILabel()
-        descriptionLabel.text = "Hello, word!"
+        descriptionLabel.text = "Hello, world!"
         descriptionLabel.font = UIFont.systemFont(ofSize: 13.0)
         descriptionLabel.textAlignment = .left
-        descriptionLabel.textColor = UIColor(named: "YP White")
+        descriptionLabel.textColor = UIColor(resource: .ypWhite)
         view.addSubview(descriptionLabel)
         
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false

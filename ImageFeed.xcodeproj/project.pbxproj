@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB5EA3F92F952D3C00CF8F3B /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = DB5EA3F82F952D3C00CF8F3B /* ProgressHUD */; };
 		DB77BF092F8E770800CB5D56 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB77BF082F8E770800CB5D56 /* WebKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB77BF092F8E770800CB5D56 /* WebKit.framework in Frameworks */,
+				DB5EA3F92F952D3C00CF8F3B /* ProgressHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +95,7 @@
 			);
 			name = ImageFeed;
 			packageProductDependencies = (
+				DB5EA3F82F952D3C00CF8F3B /* ProgressHUD */,
 			);
 			productName = ImageFeed;
 			productReference = DB63FF272F5347140099DB70 /* ImageFeed.app */;
@@ -122,6 +125,9 @@
 			);
 			mainGroup = DB63FF1E2F5347140099DB70;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DB5EA3F72F952D3C00CF8F3B /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DB63FF282F5347140099DB70 /* Products */;
 			projectDirPath = "";
@@ -366,6 +372,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DB5EA3F72F952D3C00CF8F3B /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/relatedcode/ProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DB5EA3F82F952D3C00CF8F3B /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB5EA3F72F952D3C00CF8F3B /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DB63FF1F2F5347140099DB70 /* Project object */;
 }
