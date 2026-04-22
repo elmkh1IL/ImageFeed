@@ -41,7 +41,6 @@ final class AuthViewController: UIViewController {
     
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        vc.dismiss(animated: true)
         
         UIBlockingProgressHUD.show()
         
@@ -53,17 +52,29 @@ extension AuthViewController: WebViewViewControllerDelegate {
             
             switch result {
             case .success:
+                if let navigationController = vc.navigationController {
+                    navigationController.popViewController(animated: true)
+                } else {
+                    vc.dismiss(animated: true)
+                }
                 self.delegate?.didAuthenticate(self)
-                
             case .failure(let error):
                 print("Ошибка получения токена: \(error)")
-                break
+                if let navigationController = vc.navigationController {
+                    navigationController.popViewController(animated: true)
+                } else {
+                    vc.dismiss(animated: true)
+                }
             }
         }
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        vc.dismiss(animated: true)
+        if let navigationController = vc.navigationController {
+            navigationController.popViewController(animated: true)
+        } else {
+            vc.dismiss(animated: true)
+        }
     }
 }
 
