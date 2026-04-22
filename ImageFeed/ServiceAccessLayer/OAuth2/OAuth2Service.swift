@@ -26,24 +26,8 @@ struct OAuthTokenResponseBody: Codable {
     }
 }
 
-extension URLSession {
-    func data(for request: URLRequest, completionHandler: @escaping (Result<(data: Data, response: URLResponse), Error>) -> Void) -> URLSessionDataTask {
-        let task = dataTask(with: request) { data, response, error in
-            if let error = error {
-                completionHandler(.failure(error))
-                return
-            }
-
-            guard let response = response, let data = data else {
-                completionHandler(.failure(URLError(.badServerResponse)))
-                return
-            }
-
-            completionHandler(.success((data: data, response: response)))
-        }
-        task.resume()
-        return task
-    }
+enum AuthServiceError: Error {
+    case invalidRequest
 }
 
 final class OAuth2Service {
@@ -51,13 +35,34 @@ final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
+    private let dataStorage = OAuth2TokenStorage.shared
     private let jsonDecoder = JSONDecoder()
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
     
-    func fetchOAuthToken(
-        code: String,
-        completion: @escaping (Result<String, Error>) -> Void
-    ) {
-        guard let request = makeOAuthTokenRequest(code: code) else {
+    private(set) var authToken: String? {
+        get {
+            return dataStorage.token
+        }
+        set {
+            dataStorage.token = newValue
+        }
+    }
+    
+    func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        guard lastCode != code else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        
+        task?.cancel()
+        lastCode = code
+
+        guard
+            let request = makeOAuthTokenRequest(code: code)
+        else {
             DispatchQueue.main.async {
                 completion(.failure(NetworkError.invalidRequest))
             }
@@ -107,12 +112,14 @@ final class OAuth2Service {
                 }
             }
         }
+        self.task = task
         task.resume()
     }
-}
 
 private func makeOAuthTokenRequest(code: String) -> URLRequest? {
-    guard var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token") else {
+    guard
+        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")
+    else {
         return nil
     }
     
@@ -131,4 +138,33 @@ private func makeOAuthTokenRequest(code: String) -> URLRequest? {
     var request = URLRequest(url: authTokenUrl)
     request.httpMethod = HTTPMethod.post.rawValue
     return request
+}
+    
+    private struct OAuthTokenResponseBody: Codable {
+        let accessToken: String
+        
+        enum CodingKeys: String, CodingKey {
+            case accessToken = "access_token"
+        }
+    }
+}
+
+extension URLSession {
+    func data(for request: URLRequest, completionHandler: @escaping (Result<(data: Data, response: URLResponse), Error>) -> Void) -> URLSessionDataTask {
+        let task = dataTask(with: request) { data, response, error in
+            if let error = error {
+                completionHandler(.failure(error))
+                return
+            }
+
+            guard let response = response, let data = data else {
+                completionHandler(.failure(URLError(.badServerResponse)))
+                return
+            }
+
+            completionHandler(.success((data: data, response: response)))
+        }
+        task.resume()
+        return task
+    }
 }

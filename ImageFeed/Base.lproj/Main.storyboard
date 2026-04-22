@@ -104,14 +104,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="auth_screen_logo" translatesAutoresizingMaskIntoConstraints="NO" id="v2Q-qj-Vcl">
+                                <rect key="frame" x="166.66666666666666" y="396" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="IML-Gz-B4H"/>
+                                    <constraint firstAttribute="width" constant="60" id="UE0-AT-Ab0"/>
+                                </constraints>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Da8-cJ-h7Y">
-                                <rect key="frame" x="16" y="693.66666666666663" width="361" height="34.333333333333371"/>
+                                <rect key="frame" x="16" y="680" width="361" height="48"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="Gn6-R8-5un"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="tintColor" name="YP Black"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Войти">
-                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="17"/>
-                                </buttonConfiguration>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Войти">
+                                    <color key="titleColor" name="YP Black"/>
+                                </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                         <integer key="value" value="16"/>
@@ -122,22 +133,15 @@
                                     <segue destination="qJl-vy-GqJ" kind="show" identifier="ShowWebView" id="dXu-ac-DMC"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="auth_screen_logo" translatesAutoresizingMaskIntoConstraints="NO" id="v2Q-qj-Vcl">
-                                <rect key="frame" x="166.66666666666666" y="396" width="60" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="IML-Gz-B4H"/>
-                                    <constraint firstAttribute="width" constant="60" id="UE0-AT-Ab0"/>
-                                </constraints>
-                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="PWU-2S-ZSr"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
+                            <constraint firstItem="PWU-2S-ZSr" firstAttribute="bottom" secondItem="Da8-cJ-h7Y" secondAttribute="bottom" constant="90" id="62o-JG-BFH"/>
                             <constraint firstItem="v2Q-qj-Vcl" firstAttribute="centerY" secondItem="e0b-uP-kwD" secondAttribute="centerY" id="9oz-Vw-xIQ"/>
+                            <constraint firstItem="Da8-cJ-h7Y" firstAttribute="leading" secondItem="PWU-2S-ZSr" secondAttribute="leading" constant="16" id="Cbf-3Z-pnu"/>
                             <constraint firstItem="v2Q-qj-Vcl" firstAttribute="centerX" secondItem="e0b-uP-kwD" secondAttribute="centerX" id="Cvy-cS-4V6"/>
-                            <constraint firstItem="Da8-cJ-h7Y" firstAttribute="leading" secondItem="PWU-2S-ZSr" secondAttribute="leading" constant="16" id="G0U-d6-1u9"/>
-                            <constraint firstItem="PWU-2S-ZSr" firstAttribute="bottom" secondItem="Da8-cJ-h7Y" secondAttribute="bottom" constant="90" id="bWU-fW-uc9"/>
-                            <constraint firstItem="PWU-2S-ZSr" firstAttribute="trailing" secondItem="Da8-cJ-h7Y" secondAttribute="trailing" constant="16" id="yQr-Vt-zLN"/>
+                            <constraint firstItem="PWU-2S-ZSr" firstAttribute="trailing" secondItem="Da8-cJ-h7Y" secondAttribute="trailing" constant="16" id="ikW-Sc-dgz"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="bN5-rD-grn"/>

@@ -3,7 +3,7 @@ import UIKit
 final class SplashViewController: UIViewController {
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     
-    private let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
