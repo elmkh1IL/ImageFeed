@@ -1,15 +1,11 @@
 import Foundation
+import Logging
 
 struct ProfileImage: Codable {
     let small: String
     let medium: String
     let large: String
     
-    private enum CodingKeys: String, CodingKey {
-        case small
-        case medium
-        case large
-    }
 }
 
 struct UserResult: Codable {
@@ -22,10 +18,12 @@ struct UserResult: Codable {
 
 final class ProfileImageService {
     
+    private let logger = Logger(label: "ProfileImageService")
+    
     static let shared = ProfileImageService()
     private init() {}
     
-    static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
+    static let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
     
     private(set) var avatarURL: String?
     
@@ -59,7 +57,8 @@ final class ProfileImageService {
                             userInfo: ["URL": self.avatarURL ?? ""])
                 
             case .failure(let error):
-                print("[fetchProfileImageURL]: Ошибка запроса: \(error.localizedDescription)")
+                guard let self else { return }
+                self.logger.error("[fetchProfileImageURL]: Ошибка запроса: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }
@@ -75,7 +74,7 @@ final class ProfileImageService {
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = HTTPMethod.get.rawValue
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }

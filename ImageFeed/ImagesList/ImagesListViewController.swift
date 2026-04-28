@@ -1,7 +1,10 @@
-
 import UIKit
+import Logging
 
 final class ImagesListViewController: UIViewController {
+    
+    private let logger = Logger(label: "ImagesListViewController")
+
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     
@@ -77,7 +80,7 @@ extension ImagesListViewController {
         if let likeImage {
                 cell.likeButton?.setImage(likeImage, for: .normal)
             } else {
-                print("Ошибка при загрузке изображения")
+                logger.error("Ошибка при загрузке изображения")
         }
     }
 }
@@ -87,6 +90,14 @@ extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "ShowSingleImage", sender: indexPath)
     }
+    
+    func tableView(
+      _ tableView: UITableView,
+      willDisplay cell: UITableViewCell,
+      forRowAt indexPath: IndexPath
+    ) {
+        // ...
+    } 
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         

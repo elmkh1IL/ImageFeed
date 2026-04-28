@@ -1,13 +1,16 @@
 import UIKit
+import Logging
 
 final class SplashViewController: UIViewController {
+    
+    private let logger = Logger(label: "SplashViewController")
 
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     
     private let storage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     
-    private var imageView: UIImageView!
+    private var imageView: UIImageView?
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -33,15 +36,17 @@ final class SplashViewController: UIViewController {
     private func setupImageView() {
         let imageSplashScreenLogo = UIImage(resource: .splashScreenLogo)
         
-        imageView = UIImageView(image: imageSplashScreenLogo)
+       let image = UIImageView(image: imageSplashScreenLogo)
         
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(imageView)
+        image.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(image)
         
         NSLayoutConstraint.activate([
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            image.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            image.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
+        
+        imageView = image
     }
     
     private func presentAuthViewController() {
@@ -74,14 +79,14 @@ final class SplashViewController: UIViewController {
         profileService.fetchProfile(token) { [weak self] result in
             UIBlockingProgressHUD.dismiss()
             
-            guard let self = self else { return }
+            guard let self else { return }
             
             switch result {
-            case  let .success(profile):
+            case let .success(profile):
                 ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { _ in }
                 self.switchToTabBarController()
-            case  let .failure(error):
-                print("Ошибка загрузки профиля: \(error)")
+            case let .failure(error):
+                logger.error("Ошибка загрузки профиля: \(error)")
                 break
             }
         }

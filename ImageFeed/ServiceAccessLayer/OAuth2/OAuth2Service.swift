@@ -1,4 +1,5 @@
 import Foundation
+import Logging
 
 enum HTTPMethod: String {
     case get = "GET"
@@ -28,6 +29,7 @@ final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
+    private let logger = Logger(label: "OAuth2Service")
     private let dataStorage = OAuth2TokenStorage.shared
     private let jsonDecoder = JSONDecoder()
     private let urlSession = URLSession.shared
@@ -59,24 +61,22 @@ final class OAuth2Service {
             DispatchQueue.main.async {
                 completion(.failure(NetworkError.invalidRequest))
             }
-            print("Не удалось создать URLRequest для получения OAuth token")
+            logger.error("Не удалось создать URLRequest для получения OAuth token")
             return
         }
         
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
-            guard let self = self else { return }
+            guard let self else { return }
             
             switch result {
             case .success(let responseBody):
                 OAuth2TokenStorage.shared.token = responseBody.accessToken
-                DispatchQueue.main.async {
                     completion(.success(responseBody.accessToken))
-                }
                 self.task = nil
                 self.lastCode = nil
                 
             case .failure(let error):
-                print("Ошибка: \(error)")
+                logger.error("Ошибка: \(error)")
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }

@@ -1,4 +1,5 @@
 import Foundation
+import Logging
 
 struct Profile {
     let username: String
@@ -26,6 +27,8 @@ enum ProfileServiceError: Error {
 }
 
 final class ProfileService {
+    
+    private let logger = Logger(label: "ProfileService")
     static let shared = ProfileService()
     private init() {}
     
@@ -54,7 +57,8 @@ final class ProfileService {
                 self?.profile = profile
                 completion(.success(profile))
             case .failure(let error):
-                print("[fetchProfile]: Ошибка запроса: \(error.localizedDescription)")
+                guard let self else { return }
+                self.logger.error("[fetchProfile]: Ошибка запроса: \(error.localizedDescription)")
                 completion(.failure(error))
             }
             self?.task = nil
@@ -67,7 +71,7 @@ final class ProfileService {
             return nil
         }
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = HTTPMethod.get.rawValue
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }

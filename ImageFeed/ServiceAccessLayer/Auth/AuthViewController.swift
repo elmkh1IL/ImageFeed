@@ -1,6 +1,6 @@
-
 import UIKit
 import ProgressHUD
+import Logging
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -10,6 +10,8 @@ final class AuthViewController: UIViewController {
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
+    
+    private let logger = Logger(label: "AuthViewController")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,7 +61,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 }
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                print("Ошибка получения токена: \(error)")
+                logger.error("Ошибка получения токена: \(error)")
                 if let navigationController = vc.navigationController {
                     navigationController.popViewController(animated: true)
                 } else {
