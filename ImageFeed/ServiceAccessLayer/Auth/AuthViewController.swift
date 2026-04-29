@@ -1,6 +1,6 @@
-
 import UIKit
 import ProgressHUD
+import Logging
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -10,6 +10,8 @@ final class AuthViewController: UIViewController {
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
+    
+    private let logger = Logger(label: "AuthViewController")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +24,7 @@ final class AuthViewController: UIViewController {
             guard
                 let webViewViewController = segue.destination as? WebViewViewController
             else {
-                assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
+                assertionFailure("Не удалось подготовиться к \(showWebViewSegueIdentifier)")
                 return
             }
             webViewViewController.delegate = self
@@ -59,7 +61,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 }
                 self.delegate?.didAuthenticate(self)
             case .failure(let error):
-                print("Ошибка получения токена: \(error)")
+                logger.error("Ошибка получения токена: \(error)")
                 if let navigationController = vc.navigationController {
                     navigationController.popViewController(animated: true)
                 } else {
@@ -86,4 +88,15 @@ extension AuthViewController {
     }
 }
 
-
+extension AuthViewController {
+    func showAuthErrorAlert() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "Ок", style: .default, handler: nil)
+        alertController.addAction(okAction)
+        present(alertController, animated: true, completion: nil)
+    }
+}

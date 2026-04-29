@@ -1,11 +1,5 @@
 import Foundation
-
-enum NetworkError: Error {
-    case invalidRequest
-    case httpStatusCode(Int)
-    case unknownHTTPResponse
-    case decodingError(Error)
-}
+import Logging
 
 enum HTTPMethod: String {
     case get = "GET"
@@ -35,6 +29,7 @@ final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
+    private let logger = Logger(label: "OAuth2Service")
     private let dataStorage = OAuth2TokenStorage.shared
     private let jsonDecoder = JSONDecoder()
     private let urlSession = URLSession.shared
@@ -59,93 +54,61 @@ final class OAuth2Service {
         
         task?.cancel()
         lastCode = code
-
+        
         guard
             let request = makeOAuthTokenRequest(code: code)
         else {
             DispatchQueue.main.async {
                 completion(.failure(NetworkError.invalidRequest))
             }
-            print("Не удалось создать URLRequest для получения OAuth token")
+            logger.error("Не удалось создать URLRequest для получения OAuth token")
             return
         }
         
-        let task = URLSession.shared.data(for: request) { result in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            guard let self else { return }
+            
             switch result {
-            case .success(let (data, response)):
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    DispatchQueue.main.async {
-                        completion(.failure(NetworkError.unknownHTTPResponse))
-                    }
-                    return
-                }
-                
-                let statusCode = httpResponse.statusCode
-                
-                guard 200..<300 ~= statusCode else {
-                    let errorBody = String(data: data, encoding: .utf8) ?? "Не удалось прочитать тело ответа"
-                    print("Ошибка Unsplash. Код: \(statusCode)")
-                    print("Тело ответа: \(errorBody)")
-                    DispatchQueue.main.async {
-                        completion(.failure(NetworkError.httpStatusCode(statusCode)))
-                    }
-                    return
-                }
-                
-                do {
-                    let responseBody = try self.jsonDecoder.decode(OAuthTokenResponseBody.self, from: data)
-                    OAuth2TokenStorage.shared.token = responseBody.accessToken
-                    DispatchQueue.main.async {
-                        completion(.success(responseBody.accessToken))
-                    }
-                } catch {
-                    print("Ошибка декодирования OAuthTokenResponseBody: \(error)")
-                    DispatchQueue.main.async {
-                        completion(.failure(NetworkError.decodingError(error)))
-                    }
-                }
+            case .success(let responseBody):
+                OAuth2TokenStorage.shared.token = responseBody.accessToken
+                    completion(.success(responseBody.accessToken))
+                self.task = nil
+                self.lastCode = nil
                 
             case .failure(let error):
-                print("Сетевая ошибка: \(error)")
+                logger.error("Ошибка: \(error)")
                 DispatchQueue.main.async {
                     completion(.failure(error))
                 }
+                self.task = nil
+                self.lastCode = nil
             }
         }
         self.task = task
-        task.resume()
-    }
-
-private func makeOAuthTokenRequest(code: String) -> URLRequest? {
-    guard
-        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")
-    else {
-        return nil
     }
     
-    urlComponents.queryItems = [
-        URLQueryItem(name: "client_id", value: Constants.accessKey),
-        URLQueryItem(name: "client_secret", value: Constants.secretKey),
-        URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
-        URLQueryItem(name: "code", value: code),
-        URLQueryItem(name: "grant_type", value: "authorization_code"),
-    ]
-    
-    guard let authTokenUrl = urlComponents.url else {
-        return nil
-    }
-    
-    var request = URLRequest(url: authTokenUrl)
-    request.httpMethod = HTTPMethod.post.rawValue
-    return request
-}
-    
-    private struct OAuthTokenResponseBody: Codable {
-        let accessToken: String
-        
-        enum CodingKeys: String, CodingKey {
-            case accessToken = "access_token"
+    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
+        guard
+            var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")
+        else {
+            return nil
         }
+        
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: Constants.accessKey),
+            URLQueryItem(name: "client_secret", value: Constants.secretKey),
+            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code"),
+        ]
+        
+        guard let authTokenUrl = urlComponents.url else {
+            return nil
+        }
+        
+        var request = URLRequest(url: authTokenUrl)
+        request.httpMethod = HTTPMethod.post.rawValue
+        return request
     }
 }
 
