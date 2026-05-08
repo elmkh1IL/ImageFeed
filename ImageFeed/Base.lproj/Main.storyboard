@@ -231,6 +231,9 @@
                                                     </constraints>
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="Like_Active"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked:" destination="rmp-9F-xkg" eventType="touchUpInside" id="KWd-2y-JqX"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JRK-A0-n0X" userLabel="Date_label">
                                                     <rect key="frame" x="20" y="121" width="102" height="16"/>

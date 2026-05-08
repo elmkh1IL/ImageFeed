@@ -1,6 +1,10 @@
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
+    
+    var imageURL: URL?
+    
     var image: UIImage? {
         didSet {
             guard isViewLoaded, let image else {return}
@@ -12,7 +16,8 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction func didTapBackButton() {
-        dismiss(animated: true, completion: nil)
+        //dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func shareButton(_ sender: UIButton) {
@@ -32,12 +37,49 @@ final class SingleImageViewController: UIViewController {
         imageView.image = image
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
+        loadImage()
         
         guard let image else {return}
         imageView.image = image
         imageView.frame.size = image.size
         rescaleAndCenterImageInScrollView(image: image)
        }
+    
+    private func loadImage() {
+        guard let imageURL = imageURL else { return }
+        UIBlockingProgressHUD.show()
+        
+        imageView.kf.setImage(with: imageURL) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            
+            guard let self else { return }
+            
+            switch result {
+            case .success(let imageResult):
+                self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure:
+                self.showError()
+            }
+        }
+    }
+    
+    private func showError() {
+        let alertController = UIAlertController(
+            title: "Ошибка",
+            message: "Что-то пошло не так. Попрбовать еще раз?",
+            preferredStyle: .alert
+        )
+        
+        let cancelAction = UIAlertAction(title: "Не надо", style: .cancel)
+        let retryAction = UIAlertAction(title: "Повторить", style: .default) { _ in
+            self.loadImage()
+        }
+        
+        alertController.addAction(cancelAction)
+        alertController.addAction(retryAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         let minZoomScale = scrollView.minimumZoomScale
