@@ -85,7 +85,7 @@ final class ProfileViewController: UIViewController {
                     print(value.cacheType)
                     print(value.source)
                     
-                case .failure(let error):
+                case .failure:
                     logger.error("Ошибка загрузки изображения")
                 }
             }

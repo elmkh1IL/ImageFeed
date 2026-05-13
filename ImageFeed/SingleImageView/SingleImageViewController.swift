@@ -16,7 +16,6 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction func didTapBackButton() {
-        //dismiss(animated: true, completion: nil)
         navigationController?.popViewController(animated: true)
     }
     

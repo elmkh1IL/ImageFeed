@@ -57,13 +57,13 @@ final class WebViewViewController: UIViewController {
         
         updateProgress()
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         estimatedProgressObservation?.invalidate()
         estimatedProgressObservation = nil
     }
-
+    
     private func updateProgress() {
         progressView.progress = Float(webView.estimatedProgress)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
@@ -76,15 +76,15 @@ extension WebViewViewController: WKNavigationDelegate {
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
-          if let code = code(from: navigationAction) {
-              delegate?.webViewViewController(self, didAuthenticateWithCode: code)
-              decisionHandler(.cancel)
-          } else {
-              decisionHandler(.allow)
-          }
-      }
+        if let code = code(from: navigationAction) {
+            delegate?.webViewViewController(self, didAuthenticateWithCode: code)
+            decisionHandler(.cancel)
+        } else {
+            decisionHandler(.allow)
+        }
+    }
 }
-    
+
 private func code(from navigationAction: WKNavigationAction) -> String? {
     if
         let url = navigationAction.request.url,

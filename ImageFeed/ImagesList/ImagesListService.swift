@@ -17,17 +17,11 @@ struct PhotoResult: Codable {
     let urls: UrlsResult
     
     enum CodingKeys: String, CodingKey {
-        case id
+        case id, width, height, color, likes, urls, description
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-        case width
-        case height
-        case color
         case blurHash = "blur_hash"
-        case likes
         case likedByUser = "liked_by_user"
-        case description
-        case urls
     }
 }
 
@@ -77,6 +71,12 @@ final class ImagesListService {
     private let logger = Logger(label: "ImagesListService")
     private(set) var photos: [Photo] = []
     
+    private let decoder: JSONDecoder = {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            return decoder
+        }()
+    
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
     private var lastLoadedPage: Int?
     private var isLoading = false
@@ -90,13 +90,13 @@ final class ImagesListService {
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.httpMethod = isLike ? HTTPMethod.post.rawValue : HTTPMethod.delete.rawValue
         request.setValue("Client-ID \(accessKey)", forHTTPHeaderField: "Authorization")
         
         let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
             guard let self else { return }
             
-            if let error = error {
+            if let error {
                 completion(.failure(error))
                 return
             }
@@ -184,10 +184,7 @@ final class ImagesListService {
             }
             
             do {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .iso8601
-                
-                let photoResults = try decoder.decode([PhotoResult].self, from: data)
+                let photoResults = try self.decoder.decode([PhotoResult].self, from: data)
                 
                 let newPhotos = photoResults.map { Photo(from: $0) }
                 

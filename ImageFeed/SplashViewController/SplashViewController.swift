@@ -1,4 +1,5 @@
 import UIKit
+import SwiftKeychainWrapper
 import Logging
 
 final class SplashViewController: UIViewController {
@@ -12,14 +13,20 @@ final class SplashViewController: UIViewController {
     
     private var imageView: UIImageView?
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print("SplashViewController: viewDidLoad вызван")
+        setupImageView()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        setupImageView()
-        
+                  
         if let token = storage.token {
         fetchProfile(token: token)
+            print("Токен есть")
         } else {
+            print("Токена нет — открываем авторизацию")
             presentAuthViewController()
         }
     }
