@@ -232,7 +232,7 @@
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="Like_Active"/>
                                                     <connections>
-                                                        <action selector="likeButtonClicked:" destination="rmp-9F-xkg" eventType="touchUpInside" id="KWd-2y-JqX"/>
+                                                        <action selector="likeButtonClicked" destination="rmp-9F-xkg" eventType="touchUpInside" id="yYS-sz-lvz"/>
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 августа 2022" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JRK-A0-n0X" userLabel="Date_label">
@@ -256,9 +256,9 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="YP Black"/>
                                         <connections>
-                                            <outlet property="DataLabel" destination="JRK-A0-n0X" id="ACB-GM-r9b"/>
                                             <outlet property="ImageCell" destination="Kfs-kk-5d0" id="9zn-g9-HRb"/>
-                                            <outlet property="LikeButton" destination="SGT-7F-hOX" id="0u8-fI-hZJ"/>
+                                            <outlet property="dateLabel" destination="JRK-A0-n0X" id="keD-2s-d5T"/>
+                                            <outlet property="likeButton" destination="SGT-7F-hOX" id="5v4-0P-oa7"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

@@ -6,7 +6,7 @@ final class ImagesListViewController: UIViewController {
     
     private let logger = Logger(label: "ImagesListViewController")
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    var photos: [Photo] = []
+    private var lastPhotosCount = 0
     
     @IBOutlet private weak var tableView: UITableView!
     
@@ -56,33 +56,22 @@ final class ImagesListViewController: UIViewController {
     }
     
     private func updateTableViewAnimated() {
-        let oldPhotos = photos
-        photos = imagesListService.photos
+        let oldCount = lastPhotosCount
+        let newCount = imagesListService.photos.count
         
-        let oldCount = oldPhotos.count
-        let newCount = photos.count
+        guard newCount != oldCount else { return }
+        
+        lastPhotosCount = newCount
         
         tableView.performBatchUpdates({
-            var indexPathsToDelete: [IndexPath] = []
-            var indexPathsToInsert: [IndexPath] = []
-            
-            // Удаляю лишние строки, если их стало меньше
-            if newCount < oldCount {
-                indexPathsToDelete = (newCount..<oldCount).map { IndexPath(row: $0, section: 0)}
-            }
-            
-            // Если строк стало больше, добавляю
             if newCount > oldCount {
-                indexPathsToInsert = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
-                
+                let indexPathsToInsert = (oldCount..<newCount).map { IndexPath(row: $0, section: 0)}
+                self.tableView.insertRows(at: indexPathsToInsert, with: .automatic)
+            } else if newCount < oldCount {
+                let indexPathsToDelete = (newCount..<oldCount).map { IndexPath(row: $0, section: 0) }
+                self.tableView.deleteRows(at: indexPathsToDelete, with: .automatic)
             }
             
-            if !indexPathsToDelete.isEmpty {
-                tableView.deleteRows(at: indexPathsToDelete, with: .automatic)
-            }
-            if !indexPathsToInsert.isEmpty {
-                tableView.insertRows(at: indexPathsToInsert, with: .automatic)
-            }
         }) { _ in
             print("Таблица обновлена: было \(oldCount), стало \(newCount) элементов")
         }
@@ -97,8 +86,8 @@ final class ImagesListViewController: UIViewController {
                 assertionFailure("Недопустимый пункт назначения перехода(segue)")
                 return
             }
-            guard indexPath.row < photos.count else { return }
-            let photo = photos[indexPath.row]
+            guard indexPath.row < imagesListService.photos.count else { return }
+            let photo = imagesListService.photos[indexPath.row]
             
             if let fullImageURL = URL(string: photo.fullImageURL) {
                 viewController.imageURL = fullImageURL
@@ -129,7 +118,7 @@ final class ImagesListViewController: UIViewController {
 extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        photos.count
+        imagesListService.photos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -142,7 +131,7 @@ extension ImagesListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let photo = photos[indexPath.row]
+        let photo = imagesListService.photos[indexPath.row]
         
         let dateString: String
         if let createdAt = photo.createdAt {
@@ -167,15 +156,15 @@ extension ImagesListViewController: UITableViewDelegate {
         willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath
     ) {
-        if indexPath.row == photos.count - 1 {
+        if indexPath.row == imagesListService.photos.count - 1 {
             imagesListService.fetchPhotosNextPage()
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        guard indexPath.row < photos.count else { return 0 }
-        let photo = photos[indexPath.row]
+        guard indexPath.row < imagesListService.photos.count else { return 0 }
+        let photo = imagesListService.photos[indexPath.row]
         
         let imageSize = photo.size
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
@@ -191,9 +180,9 @@ extension ImagesListViewController: UITableViewDelegate {
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell),
-              indexPath.row < photos.count else { return }
+              indexPath.row < imagesListService.photos.count else { return }
         
-        let photo = photos[indexPath.row]
+        let photo = imagesListService.photos[indexPath.row]
         let currentIsLiked = photo.isLiked
         
         // Сразу обновляем интерфейс
@@ -210,10 +199,10 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 switch result {
                 case .success:
                     print("Лайк успешно изменён для фото \(photo.id)")
-                    self.photos = self.imagesListService.photos
                     if let updateCell = self.tableView.cellForRow(at: indexPath) as? ImagesListCell {
-                        updateCell.setIsLiked(self.photos[indexPath.row].isLiked)
-                    }
+                        let updatedPhoto = self.imagesListService.photos[indexPath.row]
+                           updateCell.setIsLiked(updatedPhoto.isLiked)
+                       }
                 case .failure(let error):
                     print("Ошибка при изменении лайка: \(error)")
                     cell.setIsLiked(currentIsLiked)
