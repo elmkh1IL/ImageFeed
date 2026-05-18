@@ -12,6 +12,7 @@ final class ImagesListViewController: UIViewController {
     
     private let imagesListService = ImagesListService()
     private var notificationObserver: NSObjectProtocol?
+    private var isFirstLoad = true
     
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -61,22 +62,27 @@ final class ImagesListViewController: UIViewController {
         
         guard newCount != oldCount else { return }
         
-        lastPhotosCount = newCount
-        
-        tableView.performBatchUpdates({
-            if newCount > oldCount {
-                let indexPathsToInsert = (oldCount..<newCount).map { IndexPath(row: $0, section: 0)}
-                self.tableView.insertRows(at: indexPathsToInsert, with: .automatic)
-            } else if newCount < oldCount {
-                let indexPathsToDelete = (newCount..<oldCount).map { IndexPath(row: $0, section: 0) }
-                self.tableView.deleteRows(at: indexPathsToDelete, with: .automatic)
+        if isFirstLoad {
+            tableView.reloadData()
+            lastPhotosCount = newCount
+            isFirstLoad = false
+            print("Первая загрузка: \(newCount) фото")
+        } else {
+            tableView.performBatchUpdates({
+                if newCount > oldCount {
+                    let indexPathsToInsert = (oldCount..<newCount).map { IndexPath(row: $0, section: 0)}
+                    self.tableView.insertRows(at: indexPathsToInsert, with: .automatic)
+                } else if newCount < oldCount {
+                    let indexPathsToDelete = (newCount..<oldCount).map { IndexPath(row: $0, section: 0) }
+                    self.tableView.deleteRows(at: indexPathsToDelete, with: .automatic)
+                }
+                
+            }) { _ in
+                self.lastPhotosCount = newCount
+                print("Таблица обновлена: было \(oldCount), стало \(newCount) элементов")
             }
-            
-        }) { _ in
-            print("Таблица обновлена: было \(oldCount), стало \(newCount) элементов")
         }
     }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowSingleImage" {
             guard
@@ -185,7 +191,6 @@ extension ImagesListViewController: ImagesListCellDelegate {
         let photo = imagesListService.photos[indexPath.row]
         let currentIsLiked = photo.isLiked
         
-        // Сразу обновляем интерфейс
         cell.setIsLiked(!currentIsLiked)
         
         UIBlockingProgressHUD.show()
@@ -201,8 +206,8 @@ extension ImagesListViewController: ImagesListCellDelegate {
                     print("Лайк успешно изменён для фото \(photo.id)")
                     if let updateCell = self.tableView.cellForRow(at: indexPath) as? ImagesListCell {
                         let updatedPhoto = self.imagesListService.photos[indexPath.row]
-                           updateCell.setIsLiked(updatedPhoto.isLiked)
-                       }
+                        updateCell.setIsLiked(updatedPhoto.isLiked)
+                    }
                 case .failure(let error):
                     print("Ошибка при изменении лайка: \(error)")
                     cell.setIsLiked(currentIsLiked)

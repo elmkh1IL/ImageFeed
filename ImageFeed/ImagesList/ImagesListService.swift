@@ -84,6 +84,7 @@ final class ImagesListService {
     
     // функция отвечает за сетевой запрос и ответ
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        print("changeLike вызван для photoId: \(photoId), isLike: \(isLike)")
         guard let url = URL(string: "https://api.unsplash.com/photos/\(photoId)/like") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0)))
             return
@@ -91,12 +92,19 @@ final class ImagesListService {
         
         var request = URLRequest(url: url)
         request.httpMethod = isLike ? HTTPMethod.post.rawValue : HTTPMethod.delete.rawValue
-        request.setValue("Client-ID \(accessKey)", forHTTPHeaderField: "Authorization")
+        
+        guard let token = OAuth2Service.shared.authToken else {
+            completion(.failure(NSError(domain: "Unauthorized", code: 401)))
+            return
+        }
+        
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
             guard let self else { return }
             
             if let error {
+                print("Сетевая ошибка: \(error)")
                 completion(.failure(error))
                 return
             }
@@ -105,6 +113,8 @@ final class ImagesListService {
                 completion(.failure(NSError(domain: "No HTTP response", code: 0)))
                 return
             }
+            
+            print("like status:", httpResponse.statusCode, "body:", String(data: data ?? Data(), encoding: .utf8) ?? "nil")
             
             DispatchQueue.main.async {
                 if (200...299).contains(httpResponse.statusCode) {
@@ -116,6 +126,7 @@ final class ImagesListService {
                 }
             }
         }
+        print("Запущен dataTask")
         task.resume()
     }
     
