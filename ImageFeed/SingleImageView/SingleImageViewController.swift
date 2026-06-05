@@ -1,5 +1,6 @@
 import UIKit
 import Kingfisher
+import ProgressHUD
 
 final class SingleImageViewController: UIViewController {
     
@@ -8,12 +9,12 @@ final class SingleImageViewController: UIViewController {
     var image: UIImage? {
         didSet {
             guard isViewLoaded, let image else {return}
-            
             rescaleAndCenterImageInScrollView(image: image)
         }
     }
     
     @IBAction func didTapBackButton() {
+        UIBlockingProgressHUD.dismiss()
         dismiss(animated: true)
     }
     
@@ -45,7 +46,6 @@ final class SingleImageViewController: UIViewController {
         centerImage()
     }
     
-    
     private func loadImage() {
         guard let imageURL = imageURL else { return }
         UIBlockingProgressHUD.show()
@@ -65,6 +65,7 @@ final class SingleImageViewController: UIViewController {
     }
     
     private func showError() {
+        UIBlockingProgressHUD.dismiss()
         let alertController = UIAlertController(
             title: "Ошибка",
             message: "Что-то пошло не так. Попрбовать еще раз?",

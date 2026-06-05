@@ -1,6 +1,7 @@
 import UIKit
 import Logging
 import Kingfisher
+import ProgressHUD
 
 final class ImagesListViewController: UIViewController {
     

@@ -20,6 +20,7 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(resource: .ypBlack)
         setupViews()
         
         if let profile = ProfileService.shared.profile {

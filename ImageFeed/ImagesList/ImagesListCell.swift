@@ -38,16 +38,13 @@ final class ImagesListCell: UITableViewCell {
                     .scaleFactor(UIScreen.main.scale),
                     .transition(.fade(0.2))
                 ]
-            ) { _ in
-                guard let indexPath = self.currentIndexPath else { return }
-                self.delegate?.reloadCell(at: indexPath)
-            }
+           )
         } else {
             imageCell.image = placeholder
             logger.error("Неверный URL: \(photo.thumbImageURL)")
         }
     }
-    
+
     func setIsLiked(_ isLiked: Bool) {
         likeButton.setImage(UIImage(resource: isLiked ? .likeActive : .likeNoActive), for: .normal)
     }
