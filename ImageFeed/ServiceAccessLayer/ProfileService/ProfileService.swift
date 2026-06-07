@@ -11,7 +11,7 @@ struct Profile {
 nonisolated struct ProfileResult: Codable {
     let username: String
     let firstName: String
-    let lastName: String
+    let lastName: String?
     let bio: String?
     
     private enum CodingKeys: String, CodingKey {
@@ -49,7 +49,7 @@ final class ProfileService {
             case .success(let result):
                 let profile = Profile(
                     username: result.username,
-                    name: "\(result.firstName) \(result.lastName)",
+                    name: "\(result.firstName) \(result.lastName ?? "")",
                     loginName: "@\(result.username)",
                     bio: result.bio
                 )
@@ -64,6 +64,8 @@ final class ProfileService {
             self?.task = nil
         }
         self.task = task
+        task.resume()
+        
     }
     
     private func makeProfileRequest(token: String) -> URLRequest? {
@@ -74,6 +76,10 @@ final class ProfileService {
         request.httpMethod = HTTPMethod.get.rawValue
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
+    }
+    
+    func reset() {
+        profile = nil
     }
 }
 

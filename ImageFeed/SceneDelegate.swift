@@ -5,10 +5,17 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        print("SceneDelegate: scene вызван")
         guard let scene = scene as? UIWindowScene else { return }
-        window = UIWindow(windowScene: scene)
-        window?.rootViewController = SplashViewController()
-        window?.makeKeyAndVisible()
+        let window = UIWindow(windowScene: scene)
+        print("Окно создано")
+        window.rootViewController = SplashViewController()
+        print("RootViewController установлен")
+        window.makeKeyAndVisible()
+        print("Окно видимо")
+        
+        self.window = window
+            print("self.window сохранён")
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

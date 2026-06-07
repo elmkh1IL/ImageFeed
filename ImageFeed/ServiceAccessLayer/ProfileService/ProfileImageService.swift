@@ -1,4 +1,5 @@
 import Foundation
+import Kingfisher
 import Logging
 
 struct ProfileImage: Codable {
@@ -77,5 +78,10 @@ final class ProfileImageService {
         request.httpMethod = HTTPMethod.get.rawValue
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
+    }
+    
+    func clearCache() {
+        ImageCache.default.clearMemoryCache()
+        ImageCache.default.clearDiskCache()
     }
 }
