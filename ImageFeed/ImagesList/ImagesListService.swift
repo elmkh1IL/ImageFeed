@@ -65,7 +65,7 @@ extension Array {
     }
 }
 
-final class ImagesListService {
+final class ImagesListService: ImagesListServiceProtocol {
     static let shared = ImagesListService()
     let accessKey = Constants.accessKey
     private let logger = Logger(label: "ImagesListService")
@@ -83,7 +83,7 @@ final class ImagesListService {
     private let urlSession = URLSession.shared
     
     // функция отвечает за сетевой запрос и ответ
-    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+    func changeLike(photoId: String, isLike: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         print("changeLike вызван для photoId: \(photoId), isLike: \(isLike)")
         guard let url = URL(string: "https://api.unsplash.com/photos/\(photoId)/like") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0)))

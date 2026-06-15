@@ -1,17 +1,37 @@
 import UIKit
 import Logging
 import Kingfisher
-import ProgressHUD
+
+protocol ImagesListServiceProtocol: AnyObject {
+    var photos: [Photo] { get }
+    func fetchPhotosNextPage()
+    func changeLike(photoId: String, isLike: Bool, completion: @escaping (Result<Void, Error>)-> Void)
+}
 
 final class ImagesListViewController: UIViewController {
+    
+    var imagesListService: ImagesListServiceProtocol!
+    
+    func configure(_ service: ImagesListServiceProtocol) {
+            self.imagesListService = service
+        }
     
     private let logger = Logger(label: "ImagesListViewController")
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var lastPhotosCount = 0
     
-    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView!
     
-    private let imagesListService = ImagesListService()
+    init(imagesListService: ImagesListServiceProtocol) {
+        self.imagesListService = imagesListService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        self.imagesListService = ImagesListService() // исправлено: реальный сервис
+                super.init(coder: coder)
+    }
+    
     private var notificationObserver: NSObjectProtocol?
     private var isFirstLoad = true
     
@@ -25,16 +45,16 @@ final class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        guard let tableView = tableView else {
+              logger.error("tableView is nil in viewDidLoad()")
+              return
+          }
+          
+        
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         setupTableView()
         setupNotifications()
         imagesListService.fetchPhotosNextPage()
-    }
-    
-    deinit {
-        if let observer = notificationObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
     }
     
     private func setupTableView() {

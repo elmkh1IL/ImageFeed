@@ -15,7 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		DB68EE282FA24E65003C4313 /* PBXContainerItemProxy */ = {
+		DB71ED842FD48DD5009244E4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DB63FF1F2F5347140099DB70 /* Project object */;
 			proxyType = 1;
@@ -26,7 +26,7 @@
 
 /* Begin PBXFileReference section */
 		DB63FF272F5347140099DB70 /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB68EE242FA24E65003C4313 /* ImageFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB71ED802FD48DD5009244E4 /* ImageFeedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImageFeedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB77BF082F8E770800CB5D56 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -49,6 +49,11 @@
 			path = ImageFeed;
 			sourceTree = "<group>";
 		};
+		DB71ED812FD48DD5009244E4 /* ImageFeedTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ImageFeedTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +69,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DB68EE212FA24E65003C4313 /* Frameworks */ = {
+		DB71ED7D2FD48DD5009244E4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -78,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				DB63FF292F5347140099DB70 /* ImageFeed */,
+				DB71ED812FD48DD5009244E4 /* ImageFeedTests */,
 				DB77BF072F8E770800CB5D56 /* Frameworks */,
 				DB63FF282F5347140099DB70 /* Products */,
 			);
@@ -87,7 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				DB63FF272F5347140099DB70 /* ImageFeed.app */,
-				DB68EE242FA24E65003C4313 /* ImageFeedTests.xctest */,
+				DB71ED802FD48DD5009244E4 /* ImageFeedTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,24 +135,27 @@
 			productReference = DB63FF272F5347140099DB70 /* ImageFeed.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DB68EE232FA24E65003C4313 /* ImageFeedTests */ = {
+		DB71ED7F2FD48DD5009244E4 /* ImageFeedTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DB68EE2C2FA24E65003C4313 /* Build configuration list for PBXNativeTarget "ImageFeedTests" */;
+			buildConfigurationList = DB71ED862FD48DD5009244E4 /* Build configuration list for PBXNativeTarget "ImageFeedTests" */;
 			buildPhases = (
-				DB68EE202FA24E65003C4313 /* Sources */,
-				DB68EE212FA24E65003C4313 /* Frameworks */,
-				DB68EE222FA24E65003C4313 /* Resources */,
+				DB71ED7C2FD48DD5009244E4 /* Sources */,
+				DB71ED7D2FD48DD5009244E4 /* Frameworks */,
+				DB71ED7E2FD48DD5009244E4 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DB68EE292FA24E65003C4313 /* PBXTargetDependency */,
+				DB71ED852FD48DD5009244E4 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DB71ED812FD48DD5009244E4 /* ImageFeedTests */,
 			);
 			name = ImageFeedTests;
 			packageProductDependencies = (
 			);
 			productName = ImageFeedTests;
-			productReference = DB68EE242FA24E65003C4313 /* ImageFeedTests.xctest */;
+			productReference = DB71ED802FD48DD5009244E4 /* ImageFeedTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -162,7 +171,7 @@
 					DB63FF262F5347140099DB70 = {
 						CreatedOnToolsVersion = 26.1.1;
 					};
-					DB68EE232FA24E65003C4313 = {
+					DB71ED7F2FD48DD5009244E4 = {
 						CreatedOnToolsVersion = 26.1.1;
 						TestTargetID = DB63FF262F5347140099DB70;
 					};
@@ -188,7 +197,7 @@
 			projectRoot = "";
 			targets = (
 				DB63FF262F5347140099DB70 /* ImageFeed */,
-				DB68EE232FA24E65003C4313 /* ImageFeedTests */,
+				DB71ED7F2FD48DD5009244E4 /* ImageFeedTests */,
 			);
 		};
 /* End PBXProject section */
@@ -201,7 +210,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DB68EE222FA24E65003C4313 /* Resources */ = {
+		DB71ED7E2FD48DD5009244E4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -218,7 +227,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DB68EE202FA24E65003C4313 /* Sources */ = {
+		DB71ED7C2FD48DD5009244E4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -228,10 +237,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		DB68EE292FA24E65003C4313 /* PBXTargetDependency */ = {
+		DB71ED852FD48DD5009244E4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DB63FF262F5347140099DB70 /* ImageFeed */;
-			targetProxy = DB68EE282FA24E65003C4313 /* PBXContainerItemProxy */;
+			targetProxy = DB71ED842FD48DD5009244E4 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -427,7 +436,7 @@
 			};
 			name = Release;
 		};
-		DB68EE2A2FA24E65003C4313 /* Debug */ = {
+		DB71ED872FD48DD5009244E4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -448,7 +457,7 @@
 			};
 			name = Debug;
 		};
-		DB68EE2B2FA24E65003C4313 /* Release */ = {
+		DB71ED882FD48DD5009244E4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -490,11 +499,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DB68EE2C2FA24E65003C4313 /* Build configuration list for PBXNativeTarget "ImageFeedTests" */ = {
+		DB71ED862FD48DD5009244E4 /* Build configuration list for PBXNativeTarget "ImageFeedTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DB68EE2A2FA24E65003C4313 /* Debug */,
-				DB68EE2B2FA24E65003C4313 /* Release */,
+				DB71ED872FD48DD5009244E4 /* Debug */,
+				DB71ED882FD48DD5009244E4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

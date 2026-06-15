@@ -6,46 +6,76 @@ enum SystemImage: String {
     case personCircleFill = "person.circle.fill"
 }
 
-final class ProfileViewController: UIViewController {
+protocol ProfileServiceProtocol {
+    var profile: Profile? { get }
+}
+
+protocol ProfileImageServiceProtocol {
+    var avatarURL: String? { get }
+}
+
+protocol ProfileLogoutServiceProtocol {
+    func logout()
+}
+
+protocol ProfileViewControllerProtocol: AnyObject {
+    func setupViews()
+    func updateProfileDetails(profile: Profile)
+    func updateAvatar(with urlString: String?)
+    func showLogoutAlert()
+}
+
+
+final class ProfileViewController: UIViewController, ProfileImageServiceDelegate, ProfileViewControllerProtocol {
     
     private let logger = Logger(label: "ProfileViewController")
+    
+    // зависимости
+    private let profileService: ProfileServiceProtocol
+    private let imageService: ProfileImageServiceProtocol
+    private let logoutService: ProfileLogoutServiceProtocol
+    
+    init(
+           profileService: ProfileServiceProtocol = ProfileService.shared,
+           imageService: ProfileImageServiceProtocol = ProfileImageService.shared,
+           logoutService: ProfileLogoutServiceProtocol = ProfileLogoutService.shared
+       ) {
+           self.profileService = profileService
+           self.imageService = imageService
+           self.logoutService = logoutService
+           super.init(nibName: nil, bundle: nil)
+       }
+    
+    required init?(coder: NSCoder) {
+          // TODO: заменить фатал еррор
+        fatalError("init(coder:) has not been implemented")
+       }
     
     private var profileImage: UIImageView?
     private var nameLabel: UILabel?
     private var usernameLabel: UILabel?
     private var descriptionLabel: UILabel?
-    private var exitButton: UIButton?
-    
-    private var profileImageServiceObserver: NSObjectProtocol?
+    var exitButton: UIButton?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .ypBlack)
         setupViews()
         
-        if let profile = ProfileService.shared.profile {
+        if let profile = profileService.profile {
             updateProfileDetails(profile: profile)
         }
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                self?.updateAvatar()
-            }
         
-        updateAvatar()
-        
-    }
-    
-    deinit {
-        if let observer = profileImageServiceObserver {
-            NotificationCenter.default.removeObserver(observer)
+        if let imageService = imageService as? ProfileImageService {
+            imageService.delegate = self
+        } else {
+            logger.warning("Внимание: imageService не соотвествует требованиям")
         }
+        updateAvatar(with: imageService.avatarURL)
+        
     }
     
-    private func setupViews() {
+    func setupViews() {
         
         setupProfileImage()
         setupNameLabel()
@@ -54,43 +84,54 @@ final class ProfileViewController: UIViewController {
         setupExitButton()
     }
     
-    private func updateAvatar() {
+    func updateAvatar(with urlString: String?) {
         guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let profileImageURL = urlString,
             let imageURL = URL(string: profileImageURL),
             let profileImageView = profileImage
         else { return }
         
         print("imageURL: \(imageURL)")
         
-        let placeholderImage = UIImage(systemName: SystemImage.personCircleFill.rawValue)?
-            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
-            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
+        let options = configureImage()
         
-        let processor = RoundCornerImageProcessor(cornerRadius: 35)
         profileImageView.kf.indicatorType = .activity
         profileImageView.kf.setImage(
             with: imageURL,
-            placeholder: placeholderImage,
-            options: [
+            placeholder: options.placeholder,
+            options: options.options
+        ) { [weak self] result in
+            guard let self else { return }
+        }
+    }
+    
+    private func configureImage() -> (placeholder: UIImage?, options: [KingfisherOptionsInfoItem]) {
+            let placeholderImage = UIImage(systemName: SystemImage.personCircleFill.rawValue)?
+                .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+                .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
+            
+            let processor = RoundCornerImageProcessor(cornerRadius: 35)
+            
+            let options: [KingfisherOptionsInfoItem] = [
                 .processor(processor),
                 .scaleFactor(UIScreen.main.scale),
                 .cacheOriginalImage,
                 .forceRefresh
-            ]) { [weak self] result in
-                guard let self else { return }
+            ]
+            return (placeholderImage, options)
+        }
+        
+        private func imageLoadResult (_ result: Result<RetrieveImageResult, KingfisherError>) {
+            switch result {
+            case .success(let value):
+                print(value.image)
+                print(value.cacheType)
+                print(value.source)
                 
-                switch result {
-                case .success(let value):
-                    print(value.image)
-                    print(value.cacheType)
-                    print(value.source)
-                    
-                case .failure:
-                    logger.error("Ошибка загрузки изображения")
-                }
+            case .failure:
+                logger.error("Ошибка загрузки изображения")
             }
-    }
+        }
     
     private func setupProfileImage() {
         let imageView = UIImageView()
@@ -178,7 +219,7 @@ final class ProfileViewController: UIViewController {
         exitButton = exit
     }
     
-    private func updateProfileDetails(profile: Profile) {
+    func updateProfileDetails(profile: Profile) {
         guard let nameLabel = nameLabel,
               let usernameLabel = usernameLabel,
               let descriptionLabel = descriptionLabel
@@ -197,15 +238,26 @@ final class ProfileViewController: UIViewController {
         : profile.bio
     }
     
+    func profileImageService(_ service: ProfileImageService, didUpdateAvatarURL url: String?) {
+        updateAvatar(with: url)
+    }
+    
     @objc private func didTapButton() {
+     showLogoutAlert()
+    }
+    
+    func showLogoutAlert() {
         let alert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
         let logoutAction = UIAlertAction(title: "Да", style: .default) { _ in
-            ProfileLogoutService.shared.logout()
+            self.logoutService.logout()
         }
         alert.addAction(cancelAction)
         alert.addAction(logoutAction)
-        
         present(alert, animated: true)
+    }
+    
+    deinit {
+        (imageService as? ProfileImageService)?.delegate = nil
     }
 }

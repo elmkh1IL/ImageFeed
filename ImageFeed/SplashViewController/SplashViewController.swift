@@ -1,7 +1,6 @@
 import UIKit
 import SwiftKeychainWrapper
 import Logging
-import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
