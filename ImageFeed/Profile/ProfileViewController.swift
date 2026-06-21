@@ -25,7 +25,6 @@ protocol ProfileViewControllerProtocol: AnyObject {
     func showLogoutAlert()
 }
 
-
 final class ProfileViewController: UIViewController, ProfileImageServiceDelegate, ProfileViewControllerProtocol {
     
     private let logger = Logger(label: "ProfileViewController")
@@ -35,21 +34,23 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     private let imageService: ProfileImageServiceProtocol
     private let logoutService: ProfileLogoutServiceProtocol
     
+    weak var viewControllerDelegate: ProfileViewControllerProtocol? 
+    
     init(
-           profileService: ProfileServiceProtocol = ProfileService.shared,
-           imageService: ProfileImageServiceProtocol = ProfileImageService.shared,
-           logoutService: ProfileLogoutServiceProtocol = ProfileLogoutService.shared
-       ) {
-           self.profileService = profileService
-           self.imageService = imageService
-           self.logoutService = logoutService
-           super.init(nibName: nil, bundle: nil)
-       }
+        profileService: ProfileServiceProtocol = ProfileService.shared,
+        imageService: ProfileImageServiceProtocol = ProfileImageService.shared,
+        logoutService: ProfileLogoutServiceProtocol = ProfileLogoutService.shared,
+        viewControllerDelegate: ProfileViewControllerProtocol? = nil
+    ) {
+        self.profileService = profileService
+        self.imageService = imageService
+        self.logoutService = logoutService
+        super.init(nibName: nil, bundle: nil)
+    }
     
     required init?(coder: NSCoder) {
-          // TODO: заменить фатал еррор
         fatalError("init(coder:) has not been implemented")
-       }
+    }
     
     private var profileImage: UIImageView?
     private var nameLabel: UILabel?
@@ -60,10 +61,11 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .ypBlack)
-        setupViews()
+        
+        viewControllerDelegate?.setupViews()
         
         if let profile = profileService.profile {
-            updateProfileDetails(profile: profile)
+            viewControllerDelegate?.updateProfileDetails(profile: profile)
         }
         
         if let imageService = imageService as? ProfileImageService {
@@ -71,7 +73,7 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
         } else {
             logger.warning("Внимание: imageService не соотвествует требованиям")
         }
-        updateAvatar(with: imageService.avatarURL)
+        viewControllerDelegate?.updateAvatar(with: imageService.avatarURL)
         
     }
     
@@ -106,32 +108,32 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     }
     
     private func configureImage() -> (placeholder: UIImage?, options: [KingfisherOptionsInfoItem]) {
-            let placeholderImage = UIImage(systemName: SystemImage.personCircleFill.rawValue)?
-                .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
-                .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
-            
-            let processor = RoundCornerImageProcessor(cornerRadius: 35)
-            
-            let options: [KingfisherOptionsInfoItem] = [
-                .processor(processor),
-                .scaleFactor(UIScreen.main.scale),
-                .cacheOriginalImage,
-                .forceRefresh
-            ]
-            return (placeholderImage, options)
-        }
+        let placeholderImage = UIImage(systemName: SystemImage.personCircleFill.rawValue)?
+            .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
+            .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
         
-        private func imageLoadResult (_ result: Result<RetrieveImageResult, KingfisherError>) {
-            switch result {
-            case .success(let value):
-                print(value.image)
-                print(value.cacheType)
-                print(value.source)
-                
-            case .failure:
-                logger.error("Ошибка загрузки изображения")
-            }
+        let processor = RoundCornerImageProcessor(cornerRadius: 35)
+        
+        let options: [KingfisherOptionsInfoItem] = [
+            .processor(processor),
+            .scaleFactor(UIScreen.main.scale),
+            .cacheOriginalImage,
+            .forceRefresh
+        ]
+        return (placeholderImage, options)
+    }
+    
+    private func imageLoadResult (_ result: Result<RetrieveImageResult, KingfisherError>) {
+        switch result {
+        case .success(let value):
+            print(value.image)
+            print(value.cacheType)
+            print(value.source)
+            
+        case .failure:
+            logger.error("Ошибка загрузки изображения")
         }
+    }
     
     private func setupProfileImage() {
         let imageView = UIImageView()
@@ -243,7 +245,7 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     }
     
     @objc private func didTapButton() {
-     showLogoutAlert()
+        showLogoutAlert()
     }
     
     func showLogoutAlert() {

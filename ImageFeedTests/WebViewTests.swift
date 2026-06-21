@@ -1,7 +1,6 @@
 @testable import ImageFeed
 import XCTest
 
-@MainActor
 final class WebViewTests: XCTestCase {
     
     func testViewControllerCallsViewDidLoad() {
@@ -50,7 +49,7 @@ final class WebViewTests: XCTestCase {
 
     func testProgressHiddenWhenOne() {
         //given
-        let authHelper = AuthHelper() //Dummy
+        let authHelper = AuthHelper()
         let presenter = WebViewPresenter(authHelper: authHelper)
         let progress: Float = 1.0
 

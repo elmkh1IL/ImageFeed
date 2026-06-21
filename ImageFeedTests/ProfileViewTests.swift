@@ -51,17 +51,23 @@ final class ProfileViewTests: XCTestCase {
         let mockProfileService = MockProfileService()
         let mockImageService = MockProfileImageService()
         let mockLogoutService = MockProfileLogoutService()
+        let spy = ProfileViewControllerSpy()
+        mockImageService.avatarURL = "https://example.com/avatar.jpg"
         
+        print("Creating view controller...")
         let viewController = ProfileViewController(
             profileService: mockProfileService,
             imageService: mockImageService,
-            logoutService: mockLogoutService
+            logoutService: mockLogoutService,
+            viewControllerDelegate: spy
         )
+        print("View controller created successfully")
         
-        let spy = ProfileViewControllerSpy()
         
         //when
         viewController.viewDidLoad()
+        print("viewDidLoad called")
+
         
         //then
         XCTAssertTrue(spy.setupViewsCalled)
@@ -75,18 +81,19 @@ final class ProfileViewTests: XCTestCase {
         let mockProfileService = MockProfileService()
         let mockImageService = MockProfileImageService()
         let mockLogoutService = MockProfileLogoutService()
+        let spy = ProfileViewControllerSpy()
+        let profile = Profile(username: "новый юзернейм", name: "Новое имя", loginName: "@юзернейм", bio: "новое био")
+        mockProfileService.profile = profile
         
         let viewController = ProfileViewController(
             profileService: mockProfileService,
             imageService: mockImageService,
-            logoutService: mockLogoutService
+            logoutService: mockLogoutService,
+            viewControllerDelegate: spy
         )
         
-        let spy = ProfileViewControllerSpy()
-        let profile = Profile(username: "новый юзернейм", name: "Новое имя", loginName: "@юзернейм", bio: "новое био")
-        
         //when
-        viewController.updateProfileDetails(profile: profile)
+        viewController.viewDidLoad()
         
         //then
         XCTAssertTrue(spy.updateProfileDetailsCalled)
@@ -100,18 +107,18 @@ final class ProfileViewTests: XCTestCase {
         let mockProfileService = MockProfileService()
         let mockImageService = MockProfileImageService()
         let mockLogoutService = MockProfileLogoutService()
+        let spy = ProfileViewControllerSpy()
+        let validURL = "https://example.com/avatar.jpg"
         
         let viewController = ProfileViewController(
             profileService: mockProfileService,
             imageService: mockImageService,
-            logoutService: mockLogoutService
+            logoutService: mockLogoutService,
+            viewControllerDelegate: spy
         )
         
-        let spy = ProfileViewControllerSpy()
-        let validURL = "https://example.com/avatar.jpg"
-        
         //when
-        viewController.updateAvatar(with: validURL)
+        viewController.viewDidLoad()
         
         //then
         XCTAssertTrue(spy.updateAvatarCalled)
@@ -125,18 +132,19 @@ final class ProfileViewTests: XCTestCase {
         let mockProfileService = MockProfileService()
         let mockImageService = MockProfileImageService()
         let mockLogoutService = MockProfileLogoutService()
+        let spy = ProfileViewControllerSpy()
         
         let viewController = ProfileViewController(
             profileService: mockProfileService,
             imageService: mockImageService,
-            logoutService: mockLogoutService
+            logoutService: mockLogoutService,
+            viewControllerDelegate: spy
         )
-        
-        let spy = ProfileViewControllerSpy()
+    
         viewController.loadViewIfNeeded()
         
         //when
-        viewController.exitButton?.sendActions(for: .touchUpInside)
+        viewController.exitButton?.sendActions(for: UIControl.Event.touchUpInside)
         
         //then
         XCTAssertTrue(spy.showLogoutAlertCalled)

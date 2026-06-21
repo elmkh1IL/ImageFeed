@@ -13,8 +13,8 @@ final class ImagesListViewController: UIViewController {
     var imagesListService: ImagesListServiceProtocol!
     
     func configure(_ service: ImagesListServiceProtocol) {
-            self.imagesListService = service
-        }
+        self.imagesListService = service
+    }
     
     private let logger = Logger(label: "ImagesListViewController")
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
@@ -28,8 +28,8 @@ final class ImagesListViewController: UIViewController {
     }
     
     required init?(coder: NSCoder) {
-        self.imagesListService = ImagesListService() // исправлено: реальный сервис
-                super.init(coder: coder)
+        self.imagesListService = ImagesListService()
+        super.init(coder: coder)
     }
     
     private var notificationObserver: NSObjectProtocol?
@@ -46,10 +46,10 @@ final class ImagesListViewController: UIViewController {
         super.viewDidLoad()
         
         guard let tableView = tableView else {
-              logger.error("tableView is nil in viewDidLoad()")
-              return
-          }
-          
+            logger.error("tableView явлчется nil в viewDidLoad()")
+            return
+        }
+        
         
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         setupTableView()

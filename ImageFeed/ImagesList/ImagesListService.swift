@@ -72,10 +72,10 @@ final class ImagesListService: ImagesListServiceProtocol {
     private(set) var photos: [Photo] = []
     
     private let decoder: JSONDecoder = {
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-            return decoder
-        }()
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }()
     
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
     private var lastLoadedPage: Int?

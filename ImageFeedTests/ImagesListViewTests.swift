@@ -123,10 +123,8 @@ final class ImagesListViewTests: XCTestCase {
         viewController.configure(mockImagesListService)
             viewController.loadViewIfNeeded()
 
-        
-            // Проверка: tableView существует
             guard let tableView = viewController.tableView else {
-                XCTFail("tableView is nil — проверьте подключение outlet'а в Storyboard")
+                XCTFail("tableView является nil")
                 return
             }
         
