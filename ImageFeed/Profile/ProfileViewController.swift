@@ -12,6 +12,7 @@ protocol ProfileServiceProtocol {
 
 protocol ProfileImageServiceProtocol {
     var avatarURL: String? { get }
+    var delegate: ProfileImageServiceDelegate? { get set }
 }
 
 protocol ProfileLogoutServiceProtocol {
@@ -31,7 +32,7 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     
     // зависимости
     private let profileService: ProfileServiceProtocol
-    private let imageService: ProfileImageServiceProtocol
+    private var imageService: ProfileImageServiceProtocol
     private let logoutService: ProfileLogoutServiceProtocol
     
     weak var viewControllerDelegate: ProfileViewControllerProtocol? 
@@ -45,6 +46,7 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
         self.profileService = profileService
         self.imageService = imageService
         self.logoutService = logoutService
+        self.viewControllerDelegate = viewControllerDelegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -61,29 +63,32 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .ypBlack)
-        
+        logger.debug("viewDidLoad: начинаем вызов делегата setupViews")
         viewControllerDelegate?.setupViews()
+        logger.debug("viewDidLoad: делегат setupViews вызван")
         
         if let profile = profileService.profile {
+            logger.debug("viewDidLoad: есть профиль, вызываем updateProfileDetails")
             viewControllerDelegate?.updateProfileDetails(profile: profile)
         }
         
-        if let imageService = imageService as? ProfileImageService {
+        /*if let imageService = imageService as? ProfileImageService {
             imageService.delegate = self
         } else {
-            logger.warning("Внимание: imageService не соотвествует требованиям")
-        }
-        viewControllerDelegate?.updateAvatar(with: imageService.avatarURL)
-        
+            logger.warning("Внимание: imageService не соответствует требованиям")
+            logger.debug("imageService type: \(type(of: imageService))")
+        }*/
+        imageService.delegate = self
     }
     
     func setupViews() {
-        
+        logger.debug("setupViews: начинаем настройку UI‑элементов")
         setupProfileImage()
         setupNameLabel()
         setupUsernameLabel()
         setupDescriptionLabel()
         setupExitButton()
+        logger.debug("setupViews: настройка UI‑элементов завершена")
     }
     
     func updateAvatar(with urlString: String?) {
@@ -204,10 +209,17 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     }
     
     private func setupExitButton() {
+        logger.debug("setupExitButton: начинаем создание кнопки")
         let exit = UIButton()
+        logger.debug("setupExitButton: кнопка создана")
+
         exit.setImage(UIImage(resource: .exit), for: .normal)
+        logger.debug("setupExitButton: изображение установлено")
+
         exit.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+        logger.debug("setupExitButton: обработчик события добавлен")
         view.addSubview(exit)
+        logger.debug("setupExitButton: кнопка добавлена в иерархию")
         
         exit.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -217,8 +229,10 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
             exit.widthAnchor.constraint(equalToConstant: 44),
             exit.heightAnchor.constraint(equalToConstant: 44)
         ])
+        logger.debug("setupExitButton: ограничения активированы")
         
         exitButton = exit
+        logger.debug("setupExitButton: ссылка сохранена в exitButton")
     }
     
     func updateProfileDetails(profile: Profile) {
