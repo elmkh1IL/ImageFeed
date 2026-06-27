@@ -162,6 +162,7 @@ final class ImagesListService: ImagesListServiceProtocol {
     }
     
     func fetchPhotosNextPage() {
+        print("Начали загрузку фотографий")
         guard !isLoading else { return }
         
         isLoading = true
@@ -193,19 +194,20 @@ final class ImagesListService: ImagesListServiceProtocol {
                 logger.error("Нет данных")
                 return
             }
-            
+            print("Получено данных:", data.count)
             do {
                 let photoResults = try self.decoder.decode([PhotoResult].self, from: data)
-                
+                print("Декодировано фотографий:", photoResults.count)
                 let newPhotos = photoResults.map { Photo(from: $0) }
                 
                 DispatchQueue.main.async {
                     self.photos.append(contentsOf: newPhotos)
-                    
+                    print("photos.count =", self.photos.count)
                     NotificationCenter.default.post(
                         name: ImagesListService.didChangeNotification,
                         object: self
                     )
+                    print("Notification отправлена")
                 }
             } catch {
                 logger.error("Ошибка при декодировании JSON: \(error)")

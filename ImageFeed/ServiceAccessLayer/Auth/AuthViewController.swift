@@ -6,6 +6,9 @@ protocol AuthViewControllerDelegate: AnyObject {
 }
 
 final class AuthViewController: UIViewController {
+    
+    @IBOutlet weak var authenticateButton: UIButton!
+    
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
@@ -16,6 +19,8 @@ final class AuthViewController: UIViewController {
         super.viewDidLoad()
         
         configureBackButton()
+        
+        authenticateButton.accessibilityIdentifier = "authenticateButton"
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

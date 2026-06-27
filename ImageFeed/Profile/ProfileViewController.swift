@@ -19,14 +19,7 @@ protocol ProfileLogoutServiceProtocol {
     func logout()
 }
 
-protocol ProfileViewControllerProtocol: AnyObject {
-    func setupViews()
-    func updateProfileDetails(profile: Profile)
-    func updateAvatar(with urlString: String?)
-    func showLogoutAlert()
-}
-
-final class ProfileViewController: UIViewController, ProfileImageServiceDelegate, ProfileViewControllerProtocol {
+final class ProfileViewController: UIViewController, ProfileImageServiceDelegate {
     
     private let logger = Logger(label: "ProfileViewController")
     
@@ -35,18 +28,14 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     private var imageService: ProfileImageServiceProtocol
     private let logoutService: ProfileLogoutServiceProtocol
     
-    weak var viewControllerDelegate: ProfileViewControllerProtocol? 
-    
     init(
         profileService: ProfileServiceProtocol = ProfileService.shared,
         imageService: ProfileImageServiceProtocol = ProfileImageService.shared,
-        logoutService: ProfileLogoutServiceProtocol = ProfileLogoutService.shared,
-        viewControllerDelegate: ProfileViewControllerProtocol? = nil
+        logoutService: ProfileLogoutServiceProtocol = ProfileLogoutService.shared
     ) {
         self.profileService = profileService
         self.imageService = imageService
         self.logoutService = logoutService
-        self.viewControllerDelegate = viewControllerDelegate
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -54,30 +43,24 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var profileImage: UIImageView?
-    private var nameLabel: UILabel?
-    private var usernameLabel: UILabel?
-    private var descriptionLabel: UILabel?
+    private(set) var profileImage: UIImageView?
+    private(set) var nameLabel: UILabel?
+    private(set) var usernameLabel: UILabel?
+    private(set) var descriptionLabel: UILabel?
     var exitButton: UIButton?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .ypBlack)
         logger.debug("viewDidLoad: начинаем вызов делегата setupViews")
-        viewControllerDelegate?.setupViews()
+        setupViews()
         logger.debug("viewDidLoad: делегат setupViews вызван")
         
         if let profile = profileService.profile {
             logger.debug("viewDidLoad: есть профиль, вызываем updateProfileDetails")
-            viewControllerDelegate?.updateProfileDetails(profile: profile)
+            updateProfileDetails(profile: profile)
         }
         
-        /*if let imageService = imageService as? ProfileImageService {
-            imageService.delegate = self
-        } else {
-            logger.warning("Внимание: imageService не соответствует требованиям")
-            logger.debug("imageService type: \(type(of: imageService))")
-        }*/
         imageService.delegate = self
     }
     
@@ -159,7 +142,8 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     
     private func setupNameLabel(){
         let label = UILabel()
-        label.text = "Екатерина Новикова"
+        label.text = "NameLastname"
+        label.accessibilityIdentifier = "profileNameLabel"
         label.font = UIFont.systemFont(ofSize: 23.0, weight: .bold)
         label.textAlignment = .left
         label.textColor = UIColor(resource: .ypWhite)
@@ -176,7 +160,8 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     
     private func setupUsernameLabel() {
         let username = UILabel()
-        username.text = "@ekaterina_nov"
+        username.text = "@username"
+        username.accessibilityIdentifier = "profileUsernameLabel"
         username.font = UIFont.systemFont(ofSize: 13.0)
         username.textAlignment = .left
         username.textColor = UIColor(resource: .ypGray)
@@ -194,6 +179,7 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     private func setupDescriptionLabel() {
         let description = UILabel()
         description.text = "Hello, world!"
+        description.accessibilityIdentifier = "profileDescriptionLabel"
         description.font = UIFont.systemFont(ofSize: 13.0)
         description.textAlignment = .left
         description.textColor = UIColor(resource: .ypWhite)
@@ -211,6 +197,7 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
     private func setupExitButton() {
         logger.debug("setupExitButton: начинаем создание кнопки")
         let exit = UIButton()
+        exit.accessibilityIdentifier = "logoutButton"
         logger.debug("setupExitButton: кнопка создана")
 
         exit.setImage(UIImage(resource: .exit), for: .normal)
@@ -224,7 +211,6 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
         exit.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             exit.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            exit.topAnchor.constraint(equalTo: profileImage?.topAnchor ?? view.safeAreaLayoutGuide.topAnchor),
             exit.centerYAnchor.constraint(equalTo: profileImage?.centerYAnchor ?? view.centerYAnchor),
             exit.widthAnchor.constraint(equalToConstant: 44),
             exit.heightAnchor.constraint(equalToConstant: 44)
@@ -262,15 +248,23 @@ final class ProfileViewController: UIViewController, ProfileImageServiceDelegate
         showLogoutAlert()
     }
     
-    func showLogoutAlert() {
+    func makeLogoutAlert() -> UIAlertController {
         let alert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
+        cancelAction.accessibilityIdentifier = "logoutAlertCancel"
         let logoutAction = UIAlertAction(title: "Да", style: .default) { _ in
             self.logoutService.logout()
         }
+        logoutAction.accessibilityIdentifier = "logoutAlertConfirm"
         alert.addAction(cancelAction)
         alert.addAction(logoutAction)
-        present(alert, animated: true)
+        
+        return alert
+        
+    }
+    
+    func showLogoutAlert() {
+        present(makeLogoutAlert(), animated: true)
     }
     
     deinit {
