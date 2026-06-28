@@ -65,17 +65,17 @@ extension Array {
     }
 }
 
-final class ImagesListService {
+final class ImagesListService: ImagesListServiceProtocol {
     static let shared = ImagesListService()
     let accessKey = Constants.accessKey
     private let logger = Logger(label: "ImagesListService")
     private(set) var photos: [Photo] = []
     
     private let decoder: JSONDecoder = {
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-            return decoder
-        }()
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }()
     
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
     private var lastLoadedPage: Int?
@@ -83,7 +83,7 @@ final class ImagesListService {
     private let urlSession = URLSession.shared
     
     // функция отвечает за сетевой запрос и ответ
-    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+    func changeLike(photoId: String, isLike: Bool, completion: @escaping (Result<Void, Error>) -> Void) {
         print("changeLike вызван для photoId: \(photoId), isLike: \(isLike)")
         guard let url = URL(string: "https://api.unsplash.com/photos/\(photoId)/like") else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0)))
@@ -162,6 +162,7 @@ final class ImagesListService {
     }
     
     func fetchPhotosNextPage() {
+        print("Начали загрузку фотографий")
         guard !isLoading else { return }
         
         isLoading = true
@@ -193,19 +194,20 @@ final class ImagesListService {
                 logger.error("Нет данных")
                 return
             }
-            
+            print("Получено данных:", data.count)
             do {
                 let photoResults = try self.decoder.decode([PhotoResult].self, from: data)
-                
+                print("Декодировано фотографий:", photoResults.count)
                 let newPhotos = photoResults.map { Photo(from: $0) }
                 
                 DispatchQueue.main.async {
                     self.photos.append(contentsOf: newPhotos)
-                    
+                    print("photos.count =", self.photos.count)
                     NotificationCenter.default.post(
                         name: ImagesListService.didChangeNotification,
                         object: self
                     )
+                    print("Notification отправлена")
                 }
             } catch {
                 logger.error("Ошибка при декодировании JSON: \(error)")

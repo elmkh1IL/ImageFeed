@@ -1,17 +1,37 @@
 import UIKit
 import Logging
 import Kingfisher
-import ProgressHUD
+
+protocol ImagesListServiceProtocol: AnyObject {
+    var photos: [Photo] { get }
+    func fetchPhotosNextPage()
+    func changeLike(photoId: String, isLike: Bool, completion: @escaping (Result<Void, Error>)-> Void)
+}
 
 final class ImagesListViewController: UIViewController {
+    
+    var imagesListService: ImagesListServiceProtocol!
+    
+    func configure(_ service: ImagesListServiceProtocol) {
+        self.imagesListService = service
+    }
     
     private let logger = Logger(label: "ImagesListViewController")
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var lastPhotosCount = 0
     
-    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView!
     
-    private let imagesListService = ImagesListService()
+    init(imagesListService: ImagesListServiceProtocol) {
+        self.imagesListService = imagesListService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        self.imagesListService = ImagesListService()
+        super.init(coder: coder)
+    }
+    
     private var notificationObserver: NSObjectProtocol?
     private var isFirstLoad = true
     
@@ -25,16 +45,15 @@ final class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        guard let tableView = tableView else {
+            logger.error("tableView явлчется nil в viewDidLoad()")
+            return
+        }
+        
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         setupTableView()
         setupNotifications()
         imagesListService.fetchPhotosNextPage()
-    }
-    
-    deinit {
-        if let observer = notificationObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
     }
     
     private func setupTableView() {
@@ -57,18 +76,37 @@ final class ImagesListViewController: UIViewController {
         }
     }
     
+    private var isUpdatingTable = false
+    
     private func updateTableViewAnimated() {
+        print("updateTableViewAnimated вызван")
+        print("lastPhotosCount =", lastPhotosCount)
+        print("photos.count =", imagesListService.photos.count)
+        
+        guard !isUpdatingTable else { return }
+        isUpdatingTable = true
+
+        defer {
+            isUpdatingTable = false
+        }
+        
         let oldCount = lastPhotosCount
         let newCount = imagesListService.photos.count
         
         guard newCount != oldCount else { return }
         
         if isFirstLoad {
-            tableView.reloadData()
+            //tableView.reloadData()
+            lastPhotosCount = newCount
+            tableView.insertRows(
+                at: (0..<newCount).map { IndexPath(row: $0, section: 0) },
+                with: .none
+            )
             lastPhotosCount = newCount
             isFirstLoad = false
             print("Первая загрузка: \(newCount) фото")
         } else {
+            self.lastPhotosCount = newCount
             tableView.performBatchUpdates({
                 if newCount > oldCount {
                     let indexPathsToInsert = (oldCount..<newCount).map { IndexPath(row: $0, section: 0)}
@@ -77,9 +115,7 @@ final class ImagesListViewController: UIViewController {
                     let indexPathsToDelete = (newCount..<oldCount).map { IndexPath(row: $0, section: 0) }
                     self.tableView.deleteRows(at: indexPathsToDelete, with: .automatic)
                 }
-                
             }) { _ in
-                self.lastPhotosCount = newCount
                 print("Таблица обновлена: было \(oldCount), стало \(newCount) элементов")
             }
         }
@@ -126,6 +162,8 @@ extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         imagesListService.photos.count
+        print("numberOfRows =", imagesListService.photos.count)
+        return imagesListService.photos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -180,7 +218,17 @@ extension ImagesListViewController: UITableViewDelegate {
         let scale = imageViewWidth / imageSize.width
         let cellHeight = imageSize.height * scale + imageInsets.top + imageInsets.bottom
         
+        print(
+            "row:",
+            indexPath.row,
+            "size:",
+            imageSize,
+            "height:",
+            cellHeight
+        )
+        
         return cellHeight
+        
     }
 }
 

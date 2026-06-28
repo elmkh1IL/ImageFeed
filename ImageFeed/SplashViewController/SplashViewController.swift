@@ -1,7 +1,6 @@
 import UIKit
 import SwiftKeychainWrapper
 import Logging
-import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
@@ -22,8 +21,14 @@ final class SplashViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-                  
+        print("UITEST =", ProcessInfo.processInfo.arguments.contains("UITEST"))
+        print("=== Splash ===")
+            print("Token =", storage.token ?? "nil")
+        print("viewDidAppear")
         if let token = storage.token {
+            print("=== Splash ===")
+                print("Token =", storage.token ?? "nil")
+            print("viewDidAppear")
         fetchProfile(token: token)
             print("Токен есть")
         } else {
@@ -83,6 +88,7 @@ final class SplashViewController: UIViewController {
     }
     
     private func fetchProfile(token: String) {
+        print("Начинаем загрузку профиля")
         UIBlockingProgressHUD.show()
         profileService.fetchProfile(token) { [weak self] result in
             UIBlockingProgressHUD.dismiss()
@@ -91,11 +97,19 @@ final class SplashViewController: UIViewController {
             
             switch result {
             case let .success(profile):
+                print("Начинаем загрузку профиля")
                 ProfileImageService.shared.fetchProfileImageURL(username: profile.username) { _ in }
+                print("Профиль получен")
                 self.switchToTabBarController()
             case let .failure(error):
-                logger.error("Ошибка загрузки профиля: \(error)")
-                break
+                print("fetchProfile ERROR =", error)
+                print(error.localizedDescription)
+                //logger.error("Ошибка загрузки профиля: \(error)")
+                //print("fetchProfile ERROR:", error)
+                
+                OAuth2TokenStorage.shared.token = nil
+                self.presentAuthViewController()
+                // break
             }
         }
     }

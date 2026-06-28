@@ -6,7 +6,6 @@ struct ProfileImage: Codable {
     let small: String
     let medium: String
     let large: String
-    
 }
 
 struct UserResult: Codable {
@@ -17,17 +16,20 @@ struct UserResult: Codable {
     }
 }
 
-final class ProfileImageService {
+protocol ProfileImageServiceDelegate: AnyObject {
+    func profileImageService(_ service: ProfileImageService, didUpdateAvatarURL url: String?)
+}
+
+final class ProfileImageService: ProfileImageServiceProtocol {
+    
+    weak var delegate: ProfileImageServiceDelegate?
     
     private let logger = Logger(label: "ProfileImageService")
     
     static let shared = ProfileImageService()
     private init() {}
     
-    static let didChangeNotification = Notification.Name("ProfileImageProviderDidChange")
-    
     private(set) var avatarURL: String?
-    
     private var task: URLSessionTask?
     
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
@@ -48,14 +50,9 @@ final class ProfileImageService {
             case .success(let result):
                 guard let self else { return }
                 
-                    self.avatarURL = result.profileImage.small
-                    completion(.success(result.profileImage.small))
-                
-                    NotificationCenter.default
-                        .post(
-                            name: ProfileImageService.didChangeNotification,
-                            object: self,
-                            userInfo: ["URL": self.avatarURL ?? ""])
+                self.avatarURL = result.profileImage.small
+                completion(.success(result.profileImage.small))
+                self.delegate?.profileImageService(self, didUpdateAvatarURL: self.avatarURL)
                 
             case .failure(let error):
                 guard let self else { return }

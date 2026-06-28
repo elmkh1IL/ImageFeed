@@ -6,90 +6,121 @@ enum SystemImage: String {
     case personCircleFill = "person.circle.fill"
 }
 
-final class ProfileViewController: UIViewController {
+protocol ProfileServiceProtocol {
+    var profile: Profile? { get }
+}
+
+protocol ProfileImageServiceProtocol {
+    var avatarURL: String? { get }
+    var delegate: ProfileImageServiceDelegate? { get set }
+}
+
+protocol ProfileLogoutServiceProtocol {
+    func logout()
+}
+
+final class ProfileViewController: UIViewController, ProfileImageServiceDelegate {
     
     private let logger = Logger(label: "ProfileViewController")
     
-    private var profileImage: UIImageView?
-    private var nameLabel: UILabel?
-    private var usernameLabel: UILabel?
-    private var descriptionLabel: UILabel?
-    private var exitButton: UIButton?
+    // зависимости
+    private let profileService: ProfileServiceProtocol
+    private var imageService: ProfileImageServiceProtocol
+    private let logoutService: ProfileLogoutServiceProtocol
     
-    private var profileImageServiceObserver: NSObjectProtocol?
+    init(
+        profileService: ProfileServiceProtocol = ProfileService.shared,
+        imageService: ProfileImageServiceProtocol = ProfileImageService.shared,
+        logoutService: ProfileLogoutServiceProtocol = ProfileLogoutService.shared
+    ) {
+        self.profileService = profileService
+        self.imageService = imageService
+        self.logoutService = logoutService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private(set) var profileImage: UIImageView?
+    private(set) var nameLabel: UILabel?
+    private(set) var usernameLabel: UILabel?
+    private(set) var descriptionLabel: UILabel?
+    var exitButton: UIButton?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .ypBlack)
+        logger.debug("viewDidLoad: начинаем вызов делегата setupViews")
         setupViews()
+        logger.debug("viewDidLoad: делегат setupViews вызван")
         
-        if let profile = ProfileService.shared.profile {
+        if let profile = profileService.profile {
+            logger.debug("viewDidLoad: есть профиль, вызываем updateProfileDetails")
             updateProfileDetails(profile: profile)
         }
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                self?.updateAvatar()
-            }
         
-        updateAvatar()
-        
+        imageService.delegate = self
     }
     
-    deinit {
-        if let observer = profileImageServiceObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
-    }
-    
-    private func setupViews() {
-        
+    func setupViews() {
+        logger.debug("setupViews: начинаем настройку UI‑элементов")
         setupProfileImage()
         setupNameLabel()
         setupUsernameLabel()
         setupDescriptionLabel()
         setupExitButton()
+        logger.debug("setupViews: настройка UI‑элементов завершена")
     }
     
-    private func updateAvatar() {
+    func updateAvatar(with urlString: String?) {
         guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let profileImageURL = urlString,
             let imageURL = URL(string: profileImageURL),
             let profileImageView = profileImage
         else { return }
         
         print("imageURL: \(imageURL)")
         
+        let options = configureImage()
+        
+        profileImageView.kf.indicatorType = .activity
+        profileImageView.kf.setImage(
+            with: imageURL,
+            placeholder: options.placeholder,
+            options: options.options
+        ) { [weak self] result in
+            guard let self else { return }
+        }
+    }
+    
+    private func configureImage() -> (placeholder: UIImage?, options: [KingfisherOptionsInfoItem]) {
         let placeholderImage = UIImage(systemName: SystemImage.personCircleFill.rawValue)?
             .withTintColor(.lightGray, renderingMode: .alwaysOriginal)
             .withConfiguration(UIImage.SymbolConfiguration(pointSize: 70, weight: .regular, scale: .large))
         
         let processor = RoundCornerImageProcessor(cornerRadius: 35)
-        profileImageView.kf.indicatorType = .activity
-        profileImageView.kf.setImage(
-            with: imageURL,
-            placeholder: placeholderImage,
-            options: [
-                .processor(processor),
-                .scaleFactor(UIScreen.main.scale),
-                .cacheOriginalImage,
-                .forceRefresh
-            ]) { [weak self] result in
-                guard let self else { return }
-                
-                switch result {
-                case .success(let value):
-                    print(value.image)
-                    print(value.cacheType)
-                    print(value.source)
-                    
-                case .failure:
-                    logger.error("Ошибка загрузки изображения")
-                }
-            }
+        
+        let options: [KingfisherOptionsInfoItem] = [
+            .processor(processor),
+            .scaleFactor(UIScreen.main.scale),
+            .cacheOriginalImage,
+            .forceRefresh
+        ]
+        return (placeholderImage, options)
+    }
+    
+    private func imageLoadResult (_ result: Result<RetrieveImageResult, KingfisherError>) {
+        switch result {
+        case .success(let value):
+            print(value.image)
+            print(value.cacheType)
+            print(value.source)
+            
+        case .failure:
+            logger.error("Ошибка загрузки изображения")
+        }
     }
     
     private func setupProfileImage() {
@@ -111,7 +142,8 @@ final class ProfileViewController: UIViewController {
     
     private func setupNameLabel(){
         let label = UILabel()
-        label.text = "Екатерина Новикова"
+        label.text = "NameLastname"
+        label.accessibilityIdentifier = "profileNameLabel"
         label.font = UIFont.systemFont(ofSize: 23.0, weight: .bold)
         label.textAlignment = .left
         label.textColor = UIColor(resource: .ypWhite)
@@ -128,7 +160,8 @@ final class ProfileViewController: UIViewController {
     
     private func setupUsernameLabel() {
         let username = UILabel()
-        username.text = "@ekaterina_nov"
+        username.text = "@username"
+        username.accessibilityIdentifier = "profileUsernameLabel"
         username.font = UIFont.systemFont(ofSize: 13.0)
         username.textAlignment = .left
         username.textColor = UIColor(resource: .ypGray)
@@ -146,6 +179,7 @@ final class ProfileViewController: UIViewController {
     private func setupDescriptionLabel() {
         let description = UILabel()
         description.text = "Hello, world!"
+        description.accessibilityIdentifier = "profileDescriptionLabel"
         description.font = UIFont.systemFont(ofSize: 13.0)
         description.textAlignment = .left
         description.textColor = UIColor(resource: .ypWhite)
@@ -161,24 +195,33 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupExitButton() {
+        logger.debug("setupExitButton: начинаем создание кнопки")
         let exit = UIButton()
+        exit.accessibilityIdentifier = "logoutButton"
+        logger.debug("setupExitButton: кнопка создана")
+
         exit.setImage(UIImage(resource: .exit), for: .normal)
+        logger.debug("setupExitButton: изображение установлено")
+
         exit.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
+        logger.debug("setupExitButton: обработчик события добавлен")
         view.addSubview(exit)
+        logger.debug("setupExitButton: кнопка добавлена в иерархию")
         
         exit.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             exit.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            exit.topAnchor.constraint(equalTo: profileImage?.topAnchor ?? view.safeAreaLayoutGuide.topAnchor),
             exit.centerYAnchor.constraint(equalTo: profileImage?.centerYAnchor ?? view.centerYAnchor),
             exit.widthAnchor.constraint(equalToConstant: 44),
             exit.heightAnchor.constraint(equalToConstant: 44)
         ])
+        logger.debug("setupExitButton: ограничения активированы")
         
         exitButton = exit
+        logger.debug("setupExitButton: ссылка сохранена в exitButton")
     }
     
-    private func updateProfileDetails(profile: Profile) {
+    func updateProfileDetails(profile: Profile) {
         guard let nameLabel = nameLabel,
               let usernameLabel = usernameLabel,
               let descriptionLabel = descriptionLabel
@@ -197,15 +240,34 @@ final class ProfileViewController: UIViewController {
         : profile.bio
     }
     
+    func profileImageService(_ service: ProfileImageService, didUpdateAvatarURL url: String?) {
+        updateAvatar(with: url)
+    }
+    
     @objc private func didTapButton() {
+        showLogoutAlert()
+    }
+    
+    func makeLogoutAlert() -> UIAlertController {
         let alert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
+        cancelAction.accessibilityIdentifier = "logoutAlertCancel"
         let logoutAction = UIAlertAction(title: "Да", style: .default) { _ in
-            ProfileLogoutService.shared.logout()
+            self.logoutService.logout()
         }
+        logoutAction.accessibilityIdentifier = "logoutAlertConfirm"
         alert.addAction(cancelAction)
         alert.addAction(logoutAction)
         
-        present(alert, animated: true)
+        return alert
+        
+    }
+    
+    func showLogoutAlert() {
+        present(makeLogoutAlert(), animated: true)
+    }
+    
+    deinit {
+        (imageService as? ProfileImageService)?.delegate = nil
     }
 }

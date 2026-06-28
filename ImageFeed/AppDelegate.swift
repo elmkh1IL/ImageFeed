@@ -1,5 +1,4 @@
 import UIKit
-import ProgressHUD
 internal import SwiftUI
 import Logging
 
@@ -7,7 +6,8 @@ import Logging
 final class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+        print(ProcessInfo.processInfo.arguments)
+        print("=== AppDelegate didFinishLaunching ===")
         ProgressHUD.animationType = .activityIndicator
         ProgressHUD.colorHUD = .white
         ProgressHUD.colorAnimation = .black

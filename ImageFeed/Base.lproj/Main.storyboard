@@ -32,8 +32,9 @@
                                     <outlet property="delegate" destination="N9v-Eb-Bz4" id="zMF-bC-Xv9"/>
                                 </connections>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eQB-zk-HPH">
+                            <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="navBackButtonWhite" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eQB-zk-HPH">
                                 <rect key="frame" x="8" y="67" width="48" height="48"/>
+                                <accessibility key="accessibilityConfiguration" identifier="navBackButtonWhite" label="navBackButtonWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="1zt-1x-wMa"/>
                                     <constraint firstAttribute="height" constant="48" id="yf3-jT-9a0"/>
@@ -95,9 +96,10 @@
                                     <constraint firstAttribute="width" constant="60" id="UE0-AT-Ab0"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Da8-cJ-h7Y">
+                            <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="Authenticate" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Da8-cJ-h7Y">
                                 <rect key="frame" x="16" y="646" width="361" height="48"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Authenticate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="Gn6-R8-5un"/>
                                 </constraints>
@@ -129,6 +131,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="bN5-rD-grn"/>
+                    <connections>
+                        <outlet property="authenticateButton" destination="Da8-cJ-h7Y" id="Hvc-gu-c1h"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CCz-g3-08n" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -137,7 +142,7 @@
         <!--Web View View Controller-->
         <scene sceneID="MM4-CF-yWl">
             <objects>
-                <viewController id="qJl-vy-GqJ" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewViewController" id="qJl-vy-GqJ" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rCo-D7-5kd">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -223,8 +228,9 @@
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SGT-7F-hOX" userLabel="Like_button">
+                                                <button opaque="NO" contentMode="scaleToFill" restorationIdentifier="likeButton" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SGT-7F-hOX" userLabel="Like_button">
                                                     <rect key="frame" x="333" y="4" width="44" height="44"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="likeButton"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="44" id="os1-Eq-LjE"/>
                                                         <constraint firstAttribute="height" constant="44" id="t2o-RV-mkG"/>

@@ -26,7 +26,7 @@ enum ProfileServiceError: Error {
     case noData
 }
 
-final class ProfileService {
+final class ProfileService: ProfileServiceProtocol  {
     
     private let logger = Logger(label: "ProfileService")
     static let shared = ProfileService()

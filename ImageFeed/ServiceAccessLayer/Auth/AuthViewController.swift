@@ -1,5 +1,4 @@
 import UIKit
-import ProgressHUD
 import Logging
 
 protocol AuthViewControllerDelegate: AnyObject {
@@ -7,6 +6,9 @@ protocol AuthViewControllerDelegate: AnyObject {
 }
 
 final class AuthViewController: UIViewController {
+    
+    @IBOutlet weak var authenticateButton: UIButton!
+    
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
@@ -17,6 +19,8 @@ final class AuthViewController: UIViewController {
         super.viewDidLoad()
         
         configureBackButton()
+        
+        authenticateButton.accessibilityIdentifier = "authenticateButton"
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -27,6 +31,11 @@ final class AuthViewController: UIViewController {
                 assertionFailure("Не удалось подготовиться к \(showWebViewSegueIdentifier)")
                 return
             }
+            let authHelper = AuthHelper()
+            let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+            webViewViewController.presenter = webViewPresenter
+            webViewPresenter.view = webViewViewController
+            
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
